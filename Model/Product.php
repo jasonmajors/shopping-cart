@@ -7,6 +7,7 @@ class Product extends AppModel {
 			'joinTable' => 'orders_products',
 			'foreignKey' => 'product_id',
 			'associationForeignKey' => 'order_id',
+			'unique' => false
 		)
 	);
 

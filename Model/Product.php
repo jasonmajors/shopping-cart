@@ -5,9 +5,10 @@ class Product extends AppModel {
 		array(
 			'className' => 'Order',
 			'joinTable' => 'orders_products',
+			'with' => 'OrdersProducts',
 			'foreignKey' => 'product_id',
 			'associationForeignKey' => 'order_id',
-			'unique' => false
+			'unique' => False
 		)
 	);
 

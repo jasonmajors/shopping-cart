@@ -18,7 +18,7 @@ class OrdersController extends AppController {
             return False;
         }
     }
-
+    // TODO: Has to be a better way to check this. Should query the orders_products table directly instead of looping through the data structure returned by the framework
     private function isProductInOrder($order_id, $p_id) {
         $order = $this->Order->findById($order_id);
         $products = $order['Product'];
@@ -32,13 +32,42 @@ class OrdersController extends AppController {
         return $product_found;
     }
 
-    public function create($p_id) {
-        $user_id = $this->Auth->user('id');
-        $open_order_id = $this->checkForOpenOrderID($user_id);
+    private function fetchProductQty($order_id, $p_id) {
+        $entry = $this->Order->OrdersProducts->find('all',
+                                    array('conditions' => array(
+                                                            'OrdersProducts.order_id' => $order_id, 
+                                                            'OrdersProducts.product_id' => $p_id
+                                        )
+                                    )
+                                );    
 
+        $current_qty = $entry[0]['OrdersProducts']['qty'];
+        $entry_id = $entry[0]['OrdersProducts']['id'];
+
+        return array($current_qty, $entry_id);
+    }
+
+    public function create($p_id, $qty) {
+        $user_id = $this->Auth->user('id');
+        $current_qty = 0;
+        // Check to see if this user already has an open order
+        $open_order_id = $this->checkForOpenOrderID($user_id);
         if ($open_order_id) {
+            // Check to see if the product they're adding is already in the order
+            if ($this->isProductInOrder($open_order_id, $p_id)) {
+                // Retrieve the current qty value and the id of the entry from orders_products table so we can update it
+                list($current_qty, $entry_id) = $this->fetchProductQty($open_order_id, $p_id);
+                // Update the entry
+                $data = array('id' => $entry_id, 'qty' => $current_qty + $qty);
+                // TODO: If -> then
+                $this->Order->OrdersProducts->save($data);
+                $this->Flash->set('Order Updated!');
+
+                return $this->redirect(array('controller' => 'products', 'action' => 'index'));                
+            }
+
             // addProduct() method created in Models/OrdersProducts.php
-            $this->Order->OrdersProducts->addProduct($open_order_id, $p_id); 
+            $this->Order->OrdersProducts->addProduct($open_order_id, $p_id, $qty + $current_qty); 
             if ($this->Order->saveAll()) {
                 $this->Flash->set('Order Updated');
                 return $this->redirect(array('controller' => 'products', 'action' => 'index'));
@@ -72,7 +101,7 @@ class OrdersController extends AppController {
                                                 );
 
                 // Update the row with the qty value
-                $data = array('id' => $entry[0]['OrdersProducts']['id'], 'qty' => 3);
+                $data = array('id' => $entry[0]['OrdersProducts']['id'], 'qty' => $qty);
                 $this->Order->OrdersProducts->save($data);
 
                 $this->Flash->set('New Order Created');

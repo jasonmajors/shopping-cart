@@ -1,1 +1,1 @@
-<?php print_r($order_id); ?>
+<?php print_r($qty); ?>

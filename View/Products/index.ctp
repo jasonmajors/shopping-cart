@@ -13,7 +13,16 @@
 		<td><?php echo $product['Product']['name']; ?></td>
 		<td><?php echo $product['Product']['description']; ?></td>
 		<td><?php echo $product['Product']['price']; ?></td>
-		<td><?php echo $this->Html->link('Add', array('controller' => 'orders', 'action' => 'create', $product['Product']['id'])); ?>
+		<td><?php echo $this->Form->create('OrdersProducts', 
+											array('url' => 
+												array('controller' => 'orders', 'action' => 'create')
+											)
+										); ?>
+			<?php echo $this->Form->input('qty'); ?>
+			<?php echo $this->Form->input('product_id', array('default' => $product['Product']['id'], 'type' => 'hidden')); ?>
+			<?php echo $this->Form->end('Add'); ?>
+		</td>
+		<!-- <td><?php echo $this->Html->link('Add', array('controller' => 'orders', 'action' => 'create', $product['Product']['id'])); ?> -->
 	</tr>
 	<?php endforeach; ?>	
 </table>

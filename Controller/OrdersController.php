@@ -67,10 +67,13 @@ class OrdersController extends AppController {
             $this->Flash->set('Order Updated');
             return $this->redirect(array('controller' => 'products', 'action' => 'index'));
         }
-
     }
 
-    public function create($p_id, $qty) {
+    public function create() {
+        // Retrieve the product_id and qty from View/Product/Index.ctp
+        $p_id = $this->request->data['OrdersProducts']['product_id'];
+        $qty = $this->request->data['OrdersProducts']['qty'];
+
         $user_id = $this->Auth->user('id');
         $current_qty = 0;
         // Check to see if this user already has an open order

@@ -6,6 +6,7 @@
 		<th>Product</th>
 		<th>Description</th>
 		<th>Price</th>
+		<th>Qty</th>
 	</tr>
 	<?php foreach ($order[0]['Product'] as $product): ?>
 	<tr>
@@ -13,7 +14,7 @@
 		<td><?php echo $product['name']; ?></td>
 		<td><?php echo $product['description']; ?></td>
 		<td><?php echo $product['price']; ?></td>
-
+		<td><?php echo $product['OrdersProducts']['qty']; ?></td>
 	</tr>
 	<?php endforeach; ?>	
 </table>

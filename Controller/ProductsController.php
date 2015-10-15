@@ -8,7 +8,6 @@ class ProductsController extends AppController {
         $this->set('user_id', $this->Auth->user('id'));
         $this->set('products', $this->Product->find('all'));
     }
-
 };
     
 ?>

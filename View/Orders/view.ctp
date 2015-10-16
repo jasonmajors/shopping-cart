@@ -18,3 +18,4 @@
 	</tr>
 	<?php endforeach; ?>	
 </table>
+<?php echo "Total: $$total"; ?>

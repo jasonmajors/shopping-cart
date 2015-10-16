@@ -2,7 +2,10 @@
 class OrdersProducts extends AppModel {
 	public $validate = array(
 		'qty' => array(
-			'rule' => 'notBlank'
+			'required' => array(
+				'rule' => 'notBlank',
+				'message' => 'Please enter a quantity'
+			)
 		),
 		'product_id' => array(
 			'rule' => 'notBlank'

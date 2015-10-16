@@ -46,7 +46,7 @@ class OrdersController extends AppController {
 
         return array($current_qty, $entry_id);
     }
-
+    // Updates an already existing order
     private function updateOrder($order_id, $p_id, $qty) {
         // Check to see if the product they're adding is already in the order
         if ($this->isProductInOrder($order_id, $p_id)) {
@@ -54,11 +54,13 @@ class OrdersController extends AppController {
             list($current_qty, $entry_id) = $this->fetchProductQty($order_id, $p_id);
             // Update the entry
             $data = array('id' => $entry_id, 'qty' => $current_qty + $qty);
-            // TODO: If -> then
-            $this->Order->OrdersProducts->save($data);
-            $this->Flash->set('Order Updated!');
-
-            return $this->redirect(array('controller' => 'products', 'action' => 'index'));                
+            //TODO: Add fail case
+            if ($this->Order->OrdersProducts->save($data)) {
+                $this->Flash->set('Order Updated!');
+                
+                return $this->redirect(array('controller' => 'products', 'action' => 'index')); 
+            }
+               
         }   
         // This product isn't in the order yet. Add it.
         // addProduct() method created in Models/OrdersProducts.php
@@ -70,7 +72,10 @@ class OrdersController extends AppController {
     }
 
     public function create() {
-        // Retrieve the product_id and qty from View/Product/Index.ctp
+        if (!$this->request->data) {
+            throw new NotFoundException(__('Invalid product or order'));
+        }
+        // Retrieve the product_id and qty from View/Product/Index.ctp POST request
         $p_id = $this->request->data['OrdersProducts']['product_id'];
         $qty = $this->request->data['OrdersProducts']['qty'];
 
@@ -122,15 +127,23 @@ class OrdersController extends AppController {
             }
         }
     }
-    # TODO: Check if logged in user is the user_id arg
-    public function view($user_id) {
+
+    public function view() {
+        $user_id = $this->Auth->user('id');
+
         $order = $this->Order->find('all',
                                 array('conditions' => array('Order.user_id' => $user_id, 'Order.status' => 'open')
                                 )
                             );
+        $order_total =  0;
+
+        foreach ($order[0]['Product'] as $product) {
+            $order_total = $order_total + ($product['price'] * $product['OrdersProducts']['qty']);
+            $formmated_total = number_format((float)$order_total,2, '.', '');
+        }
 
         $this->set('order', $order);
-
+        $this->set('total', $formmated_total);
     }
 }
 

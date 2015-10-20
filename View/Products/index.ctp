@@ -1,5 +1,5 @@
 <h1>Available Products</h1>
-<table>
+<table class='table'>
 	<tr>
 		<th>Product ID</th>
 		<th>Product</th>
@@ -10,23 +10,37 @@
 	<?php foreach ($products as $product): ?>
 	<tr>
 		<td><?php echo $product['Product']['id']; ?></td>
-		<td><?php echo $product['Product']['name']; ?></td>
+		<td>
+			<?php echo $this->Html->link($product['Product']['name'], array(
+																'controller' => 'products', 
+																'action' => 'view', 
+																$product['Product']['id'])); ?>
+		</td>
 		<td><?php echo $product['Product']['description']; ?></td>
 		<td><?php echo $product['Product']['price']; ?></td>
 		<td>
 			<?php echo $this->Form->create('OrdersProducts', array(	
+													'class' => 'form-inline',
 													'url' => array('controller' => 'orders', 'action' => 'create'),
 													'inputDefaults' => array(
 														'label' => false,
-														'div' => false
+														//'div' => false
 													)
 												)
 											); 
 										?>
+			<div class='form-group'>							
 			<?php echo $this->Form->input('qty'); ?>
+			</div>
 			<?php echo $this->Form->input('product_id', array('default' => $product['Product']['id'], 'type' => 'hidden')); ?>
 			<!-- order_id will be retrieved in the create() method -->
-			<?php echo $this->Form->end('Add'); ?>
+			<div class='form-group'>
+			<?php echo $this->Form->end(array(
+											'label' => 'Add',
+										)
+									); 
+								?>
+			</div>
 		</td>
 	</tr>
 	<?php endforeach; ?>	

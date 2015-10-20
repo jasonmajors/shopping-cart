@@ -33,14 +33,8 @@ class OrdersController extends AppController {
     }
 
     private function fetchProductQty($order_id, $p_id) {
-        $entry = $this->Order->OrdersProducts->find('all',
-                                    array('conditions' => array(
-                                                            'OrdersProducts.order_id' => $order_id, 
-                                                            'OrdersProducts.product_id' => $p_id
-                                        )
-                                    )
-                                );    
-
+        // Method created in OrdersProducts. Returns the data array for the row in orders_products table given an order and product ID
+        $entry = $this->Order->OrdersProducts->findProductEntry($order_id, $p_id);
         $current_qty = $entry[0]['OrdersProducts']['qty'];
         $entry_id = $entry[0]['OrdersProducts']['id'];
 
@@ -106,13 +100,7 @@ class OrdersController extends AppController {
                 $order_id = $this->Order->id;
                 // This will return the array of the row created in orders_products. We're interested in the id column
                 // so we can update the qty value
-                $entry = $this->Order->OrdersProducts->find('all',
-                                                    array('conditions' => array(
-                                                                            'OrdersProducts.order_id' => $order_id, 
-                                                                            'OrdersProducts.product_id' => $p_id
-                                                        )
-                                                    )
-                                                );
+                $entry = $this->Order->OrdersProducts->findProductEntry($order_id, $p_id);
                 // Update the row with the qty value
                 $data = array('id' => $entry[0]['OrdersProducts']['id'], 'qty' => $qty);
                 // TODO: if->then
@@ -139,11 +127,18 @@ class OrdersController extends AppController {
 
         foreach ($order[0]['Product'] as $product) {
             $order_total = $order_total + ($product['price'] * $product['OrdersProducts']['qty']);
-            $formmated_total = number_format((float)$order_total,2, '.', '');
+            $formmated_total = number_format((float)$order_total,2, '.', ',');
         }
 
         $this->set('order', $order);
         $this->set('total', $formmated_total);
+    }
+
+    public function deleteEntry($order_id, $p_id) {
+        $entry = $this->Order->OrdersProducts->findProductEntry($order_id, $p_id);
+        $this->Order->OrdersProducts->delete($id = $entry[0]['OrdersProducts']['id']);
+
+        return $this->redirect(array('controller' => 'orders', 'action' => 'view'));
     }
 }
 

@@ -20,4 +20,16 @@ class OrdersProducts extends AppModel {
 		$this->data['qty'] = $qty;
 		$this->save($this->data);
 	}
+
+	public function findProductEntry($order_id, $p_id) {
+		$product_entry = $this->find('all', array(
+									'conditions' => array(
+                                            'OrdersProducts.order_id' => $order_id, 
+                                            'OrdersProducts.product_id' => $p_id
+                                        )
+                                    )
+                                );    
+
+		return $product_entry;
+	}
 }

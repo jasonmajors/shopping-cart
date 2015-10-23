@@ -140,10 +140,21 @@ class OrdersController extends AppController {
     }
 
     public function deleteEntry($order_id, $p_id) {
+        $user_id = $this->Auth->user('id');
+        $order = $this->Order->findById($order_id);
+        // Make sure this order belongs to the logged in user and throw an error if it doesn't
+        if ($order['Order']['user_id'] != $user_id) {
+            throw new NotFoundException(__('You are not authorized to modify this order'));
+        }
+
         $entry = $this->Order->OrdersProducts->findProductEntry($order_id, $p_id);
         $this->Order->OrdersProducts->delete($id = $entry[0]['OrdersProducts']['id']);
 
         return $this->redirect(array('controller' => 'orders', 'action' => 'view'));
+    }
+
+    public function submitOrder($order_id) {
+        // Make sure it checks if the order belongs to the logged in user
     }
 }
 

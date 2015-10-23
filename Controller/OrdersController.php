@@ -59,6 +59,11 @@ class OrdersController extends AppController {
         // This product isn't in the order yet. Add it.
         // addProduct() method created in Models/OrdersProducts.php
         $this->Order->OrdersProducts->addProduct($order_id, $p_id, $qty + $current_qty); 
+        // Get the current datetime to set the the orders' 'modified' value
+        $date = date('Y-m-d H:i:s');
+        $this->Order->id = $order_id;
+        $this->Order->saveField('modified', $date);
+
         if ($this->Order->saveAll()) {
             $this->Flash->set('Order Updated');
             return $this->redirect(array('controller' => 'products', 'action' => 'index'));

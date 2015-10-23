@@ -4,6 +4,11 @@ App::uses('AppController', 'Controller');
 class ProductsController extends AppController {
     public $helpers = array('Html', 'Form');
 
+    public function beforeFilter() {
+        parent::beforeFilter();
+        $this->Auth->allow('view');
+    }
+
     public function index() {
         $this->layout = 'bootstrap';
         
@@ -12,6 +17,7 @@ class ProductsController extends AppController {
     }
 
     public function view($id=null) {
+        $this->layout = 'bootstrap';
         if (!$id) {
             throw new NotFoundException(__('Invalid product'));
         }

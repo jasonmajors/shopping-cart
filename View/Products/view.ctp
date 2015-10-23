@@ -1,0 +1,1 @@
+<h1><?php echo $product['Product']['name']; ?></h1>

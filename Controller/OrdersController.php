@@ -18,6 +18,17 @@ class OrdersController extends AppController {
             return False;
         }
     }
+    // Quick helper function to check if an order matches the logged in user
+    private function orderMatchesUser($order_id) {
+        $user_id = $this->Auth->user('id');
+        $order = $this->Order->findById($order_id);
+
+        if ($order['Order']['user_id'] == $user_id) {
+            return True;
+        } else {
+            return False;
+        }
+    }
     // TODO: Has to be a better way to check this. Should query the orders_products table directly instead of looping through the data structure returned by the framework
     private function isProductInOrder($order_id, $p_id) {
         $order = $this->Order->findById($order_id);
@@ -128,6 +139,10 @@ class OrdersController extends AppController {
                                 array('conditions' => array('Order.user_id' => $user_id, 'Order.status' => 'open')
                                 )
                             );
+        if (!$order) {
+            throw new NotFoundException(__("You're cart is empty"));
+        }
+
         $order_total =  0;
 
         foreach ($order[0]['Product'] as $product) {
@@ -140,21 +155,35 @@ class OrdersController extends AppController {
     }
 
     public function deleteEntry($order_id, $p_id) {
-        $user_id = $this->Auth->user('id');
-        $order = $this->Order->findById($order_id);
+        $order_matches_user = $this->orderMatchesUser($order_id);
         // Make sure this order belongs to the logged in user and throw an error if it doesn't
-        if ($order['Order']['user_id'] != $user_id) {
+        if (!$order_matches_user) {
             throw new NotFoundException(__('You are not authorized to modify this order'));
         }
 
         $entry = $this->Order->OrdersProducts->findProductEntry($order_id, $p_id);
         $this->Order->OrdersProducts->delete($id = $entry[0]['OrdersProducts']['id']);
+        // Update the orders table modified column
+        $date = date('Y-m-d H:i:s');
+        $this->Order->id = $order_id;
+        $this->Order->saveField('modified', $date);
 
         return $this->redirect(array('controller' => 'orders', 'action' => 'view'));
     }
 
     public function submitOrder($order_id) {
         // Make sure it checks if the order belongs to the logged in user
+        $order_matches_user = $this->orderMatchesUser($order_id);
+        if (!$order_matches_user) {
+            throw new NotFoundException(__('Unauthorized attempted order submission'));
+        }
+
+        $this->Order->id = $order_id;
+        $this->Order->saveField('status', 'closed');
+    }
+
+    public function viewAll() {
+        $user_id = $this->Auth->user('id');
     }
 }
 

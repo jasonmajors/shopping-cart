@@ -14,6 +14,7 @@ class ProductsController extends AppController {
         
         $this->set('user_id', $this->Auth->user('id'));
         $this->set('products', $this->Product->find('all'));
+        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 
     public function view($id=null) {
@@ -26,6 +27,7 @@ class ProductsController extends AppController {
         if (!$product) {
             throw new NotFoundException(__('Invalid product'));
         }
+
         $this->set('product', $product);
     }
 };

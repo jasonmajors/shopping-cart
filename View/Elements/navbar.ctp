@@ -11,8 +11,14 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><?php echo $this->Html->link('Products', array('controller' => 'products', 'action' => 'index')); ?></li>
+        <li><?php echo $this->Html->link('Home', array('controller' => 'products', 'action' => 'index')); ?></li>
+      <?php if ($loggedIn): ?>
         <li><?php echo $this->Html->link('View Cart', array('controller' => 'orders', 'action' => 'view')); ?></li>
+        <li><?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?></li>
+      <?php else: ?>
+        <li><?php echo $this->Html->link('Login', array('controller' => 'users', 'action' => 'login')); ?></li>
+        <li><?php echo $this->Html->link('Register', array('controller' => 'users', 'action' => 'add')); ?></li>
+      <?php endif; ?> 
       </ul>
     </div>
   </div>

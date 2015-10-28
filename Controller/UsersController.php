@@ -12,7 +12,7 @@ class UsersController extends AppController {
     public function login() {
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
-                return $this->redirect($this->Auth->redirectUrl());
+                return $this->redirect(array('controller' => 'products', 'action' => 'index'));
             }
             $this->Flash->set('Invalid username or password, please try again');
         }
@@ -31,6 +31,10 @@ class UsersController extends AppController {
             }
             $this->Flash->set('The user could not be saved');   
         };
+    }
+    // Need to be able to update user info
+    public function update() {
+
     }
 
 }

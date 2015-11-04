@@ -43,5 +43,3 @@
     </tr>
     <?php endforeach; ?>    
 </table>
-
-<p><?php echo $this->Html->link('Register', array('controller' => 'users', 'action' => 'add')); ?></p>

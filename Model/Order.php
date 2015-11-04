@@ -1,5 +1,8 @@
 <?php
 class Order extends AppModel {
+	public $validate = array(
+		)
+
 	public $belongsTo = array(
 		'User' => array(
 			'className' => 'User',

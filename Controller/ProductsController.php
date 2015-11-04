@@ -29,6 +29,7 @@ class ProductsController extends AppController {
         }
 
         $this->set('product', $product);
+        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 };
     

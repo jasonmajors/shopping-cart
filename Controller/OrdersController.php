@@ -132,10 +132,22 @@ class OrdersController extends AppController {
         }
     }
 
+    private function getOrderTotal($order) {
+        $order_total = 0;
+
+        foreach ($order['Product'] as $product) {
+            $order_total = $order_total + ($product['price'] * $product['OrdersProducts']['qty']);
+        }
+
+        $formmated_total = number_format((float)$order_total,2, '.', ',');
+
+        return $formmated_total;
+    }
+
     public function view() {
         $user_id = $this->Auth->user('id');
-
-        $order = $this->Order->find('all',
+        // There will only be one open order so use 'first'
+        $order = $this->Order->find('first',
                                 array('conditions' => array('Order.user_id' => $user_id, 'Order.status' => 'open')
                                 )
                             );
@@ -143,13 +155,7 @@ class OrdersController extends AppController {
             throw new NotFoundException(__("You're cart is empty"));
         }
 
-        $order_total =  0;
-
-        foreach ($order[0]['Product'] as $product) {
-            $order_total = $order_total + ($product['price'] * $product['OrdersProducts']['qty']);
-            $formmated_total = number_format((float)$order_total,2, '.', ',');
-        }
-
+        $formmated_total = $this->getOrderTotal($order);
         $this->set('order', $order);
         $this->set('total', $formmated_total);
     }
@@ -169,6 +175,27 @@ class OrdersController extends AppController {
         $this->Order->saveField('modified', $date);
 
         return $this->redirect(array('controller' => 'orders', 'action' => 'view'));
+    }
+
+    public function checkOut($order_id) {
+        // Make sure it checks if the order belongs to the logged in user
+        $order_matches_user = $this->orderMatchesUser($order_id);
+        if (!$order_matches_user) {
+            throw new NotFoundException(__('Unauthorized checkout attempt'));
+        }
+
+        $order_total = 0;
+        $order = $this->Order->findById($order_id);
+
+        if (!$order) {
+            throw new NotFoundException(__('Order not found'));
+        }
+
+        $formmated_total = $this->getOrderTotal($order);
+
+        //$this->set('total', $total);
+        $this->set('order', $order);
+        $this->set('total', $formmated_total);
     }
 
     public function submitOrder($order_id) {

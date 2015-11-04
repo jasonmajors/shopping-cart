@@ -1,5 +1,5 @@
 <?php print_r($order); ?>
-<?php if (!$order[0]['Product']): ?>
+<?php if (!$order['Product']): ?>
 	<h2>Your cart is empty</h2>
 	<h4><?php echo $this->Html->link('Return to shopping', array('controller' => 'products', 'action' => 'index')); ?></h4>
 <?php else: ?>
@@ -13,17 +13,18 @@
 			<th>Qty</th>
 			<th>Remove</th>
 		</tr>
-		<?php foreach ($order[0]['Product'] as $product): ?>
+		<?php foreach ($order['Product'] as $product): ?>
 		<tr>
 			<td><?php echo $product['id']; ?></td>
 			<td><?php echo $product['name']; ?></td>
 			<td><?php echo $product['description']; ?></td>
 			<td><?php echo $product['price'];	?></td>
 			<td><?php echo $product['OrdersProducts']['qty']; ?></td>
-			<td><?php echo $this->Html->link('Remove', array('controller' => 'orders', 'action' => 'deleteEntry', $order[0]['Order']['id'], $product['id'])); ?></td>
+			<td><?php echo $this->Html->link('Remove', array('controller' => 'orders', 'action' => 'deleteEntry', $order['Order']['id'], $product['id'])); ?></td>
 		</tr>
 		<?php endforeach; ?>	
 	</table>
 	<?php echo "Total: $$total"; ?>
+	<h4><?php echo $this->Html->link('Continue to checkout', array('controller' => 'orders', 'action' => 'checkOut', $order['Order']['id'])); ?></h4>
 	<h4><?php echo $this->Html->link('Return to shopping', array('controller' => 'products', 'action' => 'index')); ?></h4>
 <?php endif; ?>

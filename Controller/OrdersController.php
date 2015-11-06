@@ -66,18 +66,29 @@ class OrdersController extends AppController {
                 return $this->redirect(array('controller' => 'products', 'action' => 'index')); 
             }
                
-        }   
-        // This product isn't in the order yet. Add it.
-        // addProduct() method created in Models/OrdersProducts.php
-        $this->Order->OrdersProducts->addProduct($order_id, $p_id, $qty + $current_qty); 
-        // Get the current datetime to set the the orders' 'modified' value
-        $date = date('Y-m-d H:i:s');
-        $this->Order->id = $order_id;
-        $this->Order->saveField('modified', $date);
+        }
+        // This product isn't in the order yet. Add it by creating the data array to save to the table.
+        $data = array(
+            'order_id' => $order_id, 
+            'product_id' => $p_id,
+            'qty' => $qty
+        );
 
-        if ($this->Order->saveAll()) {
-            $this->Flash->set('Order Updated');
-            return $this->redirect(array('controller' => 'products', 'action' => 'index'));
+        if ($this->Order->OrdersProducts->save($data)) {
+            // Get the current datetime to set the the orders' 'modified' value
+            $date = date('Y-m-d H:i:s');
+            $this->Order->id = $order_id;
+            $this->Order->saveField('modified', $date);
+
+            if ($this->Order->saveAll()) {
+                $this->Flash->set('Order Updated');
+                return $this->redirect(array('controller' => 'products', 'action' => 'index'));
+            }
+        } 
+        // If the the validation rule in the OrdersProducts model failed
+        else {
+            $this->Flash->set('Invalid item quantity');
+            return $this->redirect(array('controller' => 'products', 'action' => 'index')); 
         }
     }
 
@@ -178,6 +189,14 @@ class OrdersController extends AppController {
     }
 
     public function checkOut($order_id) {
+        if ($this->request->is('post')) {
+            $this->Order->id = $order_id;
+
+            if ($this->Order->save($this->request->data)) {
+                $this->Flash->set('Order Placed');
+                return $this->redirect(array('controller' => 'products', 'action' => 'index'));
+            }
+        }
         // Make sure it checks if the order belongs to the logged in user
         $order_matches_user = $this->orderMatchesUser($order_id);
         if (!$order_matches_user) {

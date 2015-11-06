@@ -1,7 +1,11 @@
 <?php
 class Order extends AppModel {
 	public $validate = array(
+		'zipcode' => array(
+			'rule' => array('lengthBetween', 5, 5),
+			'message' => 'Zipcode must be 5 digits'
 		)
+	);
 
 	public $belongsTo = array(
 		'User' => array(

@@ -22,7 +22,7 @@
 <h1>Please enter a shipping address</h1>
 <?php 
 	echo $this->Form->create('Order'); 
-	echo $this->Form->input('addresss');
+	echo $this->Form->input('address');
 	echo $this->Form->input('city');
 	echo $this->Form->input('state');
 	echo $this->Form->input('zipcode');

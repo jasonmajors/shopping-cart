@@ -159,9 +159,13 @@ class OrdersController extends AppController {
         $user_id = $this->Auth->user('id');
         // There will only be one open order so use 'first'
         $order = $this->Order->find('first',
-                                array('conditions' => array('Order.user_id' => $user_id, 'Order.status' => 'open')
-                                )
-                            );
+                                array(
+                                    'conditions' => array(
+                                        'Order.user_id' => $user_id, 
+                                        'Order.status' => 'open'
+                                        )
+                                    )
+                                );
         if (!$order) {
             throw new NotFoundException(__("You're cart is empty"));
         }
@@ -191,9 +195,11 @@ class OrdersController extends AppController {
     public function checkOut($order_id) {
         if ($this->request->is('post')) {
             $this->Order->id = $order_id;
-
+            // Save the POST data
             if ($this->Order->save($this->request->data)) {
-                $this->Flash->set('Order Placed');
+                // Order placed
+                $this->Flash->set('Thank you, your order has been placed');
+                $this->submitOrder($order_id);
                 return $this->redirect(array('controller' => 'products', 'action' => 'index'));
             }
         }
@@ -217,7 +223,7 @@ class OrdersController extends AppController {
         $this->set('total', $formmated_total);
     }
 
-    public function submitOrder($order_id) {
+    private function submitOrder($order_id) {
         // Make sure it checks if the order belongs to the logged in user
         $order_matches_user = $this->orderMatchesUser($order_id);
         if (!$order_matches_user) {
@@ -225,11 +231,25 @@ class OrdersController extends AppController {
         }
 
         $this->Order->id = $order_id;
-        $this->Order->saveField('status', 'closed');
+        // Set the modified date to the date the order is placed and close the order
+        $this->Order->set(array(
+            'modified' => date('Y-m-d H:i:s'),
+            'status' => 'closed'
+            )
+        );
+        $this->Order->save();
     }
 
-    public function viewAll() {
+    public function myOrders() {
         $user_id = $this->Auth->user('id');
+        $orders = $this->Order->find('all', array(
+                                        'conditions' => array(
+                                            'Order.user_id' => $user_id,
+                                            'Order.status' => 'closed'
+                                        )
+                                    )
+                                );
+        $this->set('orders', $orders);
     }
 }
 

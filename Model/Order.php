@@ -4,7 +4,10 @@ class Order extends AppModel {
 		'zipcode' => array(
 			'rule' => array('lengthBetween', 5, 5),
 			'message' => 'Zipcode must be 5 digits'
-		)
+		),
+		'address' => array(
+			'rule' => 'notBlank',
+		),
 	);
 
 	public $belongsTo = array(

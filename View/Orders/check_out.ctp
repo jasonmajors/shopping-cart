@@ -2,7 +2,6 @@
 <h1>Review Your Order</h1>
 <table>
 	<tr>
-		<th>Product ID</th>
 		<th>Product</th>
 		<th>Description</th>
 		<th>Price</th>
@@ -10,7 +9,6 @@
 	</tr>
 	<?php foreach ($order['Product'] as $product): ?>
 	<tr>
-		<td><?php echo $product['id']; ?></td>
 		<td><?php echo $product['name']; ?></td>
 		<td><?php echo $product['description']; ?></td>
 		<td><?php echo $product['price'];	?></td>
@@ -19,6 +17,13 @@
 	<?php endforeach; ?>	
 </table>
 <p><?php echo "Total: $$total"; ?></p>
+<?php 
+	/* Array of the state initials for the dropdown select menu
+	$states = array(
+
+		)
+	*/
+?>
 <h1>Please enter a shipping address</h1>
 <?php 
 	echo $this->Form->create('Order'); 

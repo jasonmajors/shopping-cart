@@ -1,4 +1,3 @@
-<?php print_r($order); ?>
 <?php if (!$order['Product']): ?>
 	<h2>Your cart is empty</h2>
 	<h4><?php echo $this->Html->link('Return to shopping', array('controller' => 'products', 'action' => 'index')); ?></h4>
@@ -18,7 +17,7 @@
 			<td><?php echo $product['id']; ?></td>
 			<td><?php echo $product['name']; ?></td>
 			<td><?php echo $product['description']; ?></td>
-			<td><?php echo $product['price'];	?></td>
+			<td><?php echo '$' . $product['price'];	?></td>
 			<td><?php echo $product['OrdersProducts']['qty']; ?></td>
 			<td><?php echo $this->Html->link('Remove', array('controller' => 'orders', 'action' => 'deleteEntry', $order['Order']['id'], $product['id'])); ?></td>
 		</tr>

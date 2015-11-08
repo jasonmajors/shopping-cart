@@ -143,15 +143,18 @@ class OrdersController extends AppController {
         }
     }
 
-    private function getOrderTotal($order) {
+    private function getOrderTotal($order, $as_float=False) {
         $order_total = 0;
 
         foreach ($order['Product'] as $product) {
             $order_total = $order_total + ($product['price'] * $product['OrdersProducts']['qty']);
         }
-
-        $formmated_total = number_format((float)$order_total,2, '.', ',');
-
+        if ($as_float) {
+            $formmated_total = $order_total;
+        }
+        else {
+            $formmated_total = number_format((float)$order_total,2, '.', ',');
+        }
         return $formmated_total;
     }
 
@@ -229,11 +232,14 @@ class OrdersController extends AppController {
         if (!$order_matches_user) {
             throw new NotFoundException(__('Unauthorized attempted order submission'));
         }
+        $order = $this->Order->findById($order_id);
+        $formmated_total = $this->getOrderTotal($order, $as_float=True);
 
         $this->Order->id = $order_id;
         // Set the modified date to the date the order is placed and close the order
         $this->Order->set(array(
             'modified' => date('Y-m-d H:i:s'),
+            'total' => $formmated_total,
             'status' => 'closed'
             )
         );
@@ -249,7 +255,17 @@ class OrdersController extends AppController {
                                         )
                                     )
                                 );
+
         $this->set('orders', $orders);
+    }
+
+    public function viewOrder($order_id) {
+        $order_matches_user = $this->orderMatchesUser($order_id);
+        if (!$order_matches_user) {
+            throw new NotFoundException(__('Unauthorized attempt to view order'));
+        }
+        $order = $this->Order->findById($order_id);
+        $this->set('order', $order);
     }
 }
 

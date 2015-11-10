@@ -1,6 +1,6 @@
 <h1>Checkout</h1>
-<h1>Review Your Order</h1>
-<table>
+<h2>Review Your Order</h2>
+<table class='table'>
 	<tr>
 		<th>Product</th>
 		<th>Description</th>
@@ -24,7 +24,6 @@
 		)
 	*/
 ?>
-<h1>Please enter a shipping address</h1>
 <?php 
 	echo $this->Form->create('Order'); 
 	echo $this->Form->input('address');

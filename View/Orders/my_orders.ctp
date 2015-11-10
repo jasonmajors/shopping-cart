@@ -1,5 +1,5 @@
 <h1>Your Orders</h1>
-<table>
+<table class='table'>
 	<tr>
 		<th>Order No.</th>
 		<th>Date of purchase</th>

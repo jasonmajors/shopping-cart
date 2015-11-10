@@ -3,7 +3,7 @@
 	<h4><?php echo $this->Html->link('Return to shopping', array('controller' => 'products', 'action' => 'index')); ?></h4>
 <?php else: ?>
 	<h1>Your Shopping Cart</h1>
-	<table>
+	<table class='table'>
 		<tr>
 			<th>Product ID</th>
 			<th>Product</th>
@@ -23,7 +23,6 @@
 		</tr>
 		<?php endforeach; ?>	
 	</table>
-	<?php echo "Total: $$total"; ?>
+	<p class='text-right'><?php echo "Total: $$total"; ?></p>
 	<h4><?php echo $this->Html->link('Continue to checkout', array('controller' => 'orders', 'action' => 'checkOut', $order['Order']['id'])); ?></h4>
-	<h4><?php echo $this->Html->link('Return to shopping', array('controller' => 'products', 'action' => 'index')); ?></h4>
 <?php endif; ?>

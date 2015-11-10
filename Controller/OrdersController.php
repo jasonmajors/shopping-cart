@@ -142,7 +142,7 @@ class OrdersController extends AppController {
             }
         }
     }
-
+    // Return the order total as string xx.xx unless $as_float is set to true
     private function getOrderTotal($order, $as_float=False) {
         $order_total = 0;
 
@@ -159,6 +159,7 @@ class OrdersController extends AppController {
     }
 
     public function view() {
+        $this->layout = 'bootstrap';        
         $user_id = $this->Auth->user('id');
         // There will only be one open order so use 'first'
         $order = $this->Order->find('first',
@@ -176,6 +177,7 @@ class OrdersController extends AppController {
         $formmated_total = $this->getOrderTotal($order);
         $this->set('order', $order);
         $this->set('total', $formmated_total);
+        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 
     public function deleteEntry($order_id, $p_id) {
@@ -196,6 +198,7 @@ class OrdersController extends AppController {
     }
 
     public function checkOut($order_id) {
+        $this->layout = 'bootstrap';
         if ($this->request->is('post')) {
             $this->Order->id = $order_id;
             // Save the POST data
@@ -224,6 +227,7 @@ class OrdersController extends AppController {
         //$this->set('total', $total);
         $this->set('order', $order);
         $this->set('total', $formmated_total);
+        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 
     private function submitOrder($order_id) {
@@ -247,6 +251,7 @@ class OrdersController extends AppController {
     }
 
     public function myOrders() {
+        $this->layout = 'bootstrap';
         $user_id = $this->Auth->user('id');
         $orders = $this->Order->find('all', array(
                                         'conditions' => array(
@@ -257,15 +262,18 @@ class OrdersController extends AppController {
                                 );
 
         $this->set('orders', $orders);
+        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 
     public function viewOrder($order_id) {
+        $this->layout = 'bootstrap';
         $order_matches_user = $this->orderMatchesUser($order_id);
         if (!$order_matches_user) {
             throw new NotFoundException(__('Unauthorized attempt to view order'));
         }
         $order = $this->Order->findById($order_id);
         $this->set('order', $order);
+        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 }
 

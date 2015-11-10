@@ -10,7 +10,7 @@ class ProductsController extends AppController {
     }
 
     public function index() {
-        $this->layout = 'bootstrap';
+        $this->layout = 'bootstrap-index';
         
         $this->set('user_id', $this->Auth->user('id'));
         $this->set('products', $this->Product->find('all'));

@@ -23,6 +23,8 @@
 <body>
 	
 	<?php echo $this->element('navbar'); ?>
+	<?php echo $this->element('carousel'); ?>
+
 	<div class="container">
 		<?php echo $this->Session->flash(); ?>
 

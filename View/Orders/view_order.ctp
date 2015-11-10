@@ -1,5 +1,5 @@
 <h1>Order No. <?php echo $order['Order']['id']; ?></h1>
-<table>
+<table class='table'>
 	<tr>
 		<th>Product ID</th>
 		<th>Product</th>
@@ -12,7 +12,7 @@
 		<td><?php echo $product['id']; ?></td>
 		<td><?php echo $product['name']; ?></td>
 		<td><?php echo $product['description']; ?></td>
-		<td><?php echo $product['price'];	?></td>
+		<td><?php echo '$' . $product['price'];	?></td>
 		<td><?php echo $product['OrdersProducts']['qty']; ?></td>
 	</tr>
 	<?php endforeach; ?>	

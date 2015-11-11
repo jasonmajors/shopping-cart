@@ -19,11 +19,11 @@ class OrdersController extends AppController {
         }
     }
     // Quick helper function to check if an order matches the logged in user
-    private function orderMatchesUser($order_id) {
+    private function orderMatchesUser($order_id, $status='open') {
         $user_id = $this->Auth->user('id');
         $order = $this->Order->findById($order_id);
 
-        if ($order['Order']['user_id'] == $user_id) {
+        if (($order['Order']['user_id'] == $user_id) && ($order['Order']['status'] == $status)) {
             return True;
         } else {
             return False;
@@ -170,21 +170,24 @@ class OrdersController extends AppController {
                                         )
                                     )
                                 );
-        if (!$order) {
-            throw new NotFoundException(__("You're cart is empty"));
+        if ($order) {
+            $formmated_total = $this->getOrderTotal($order);
+            $this->set('order', $order);
+            $this->set('total', $formmated_total);
+            $this->set('loggedIn', $this->Auth->loggedIn());
+            $this->set('empty', False);
+        } 
+        else {
+            $this->set('loggedIn', $this->Auth->loggedIn());
+            $this->set('empty', True);
         }
-
-        $formmated_total = $this->getOrderTotal($order);
-        $this->set('order', $order);
-        $this->set('total', $formmated_total);
-        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 
     public function deleteEntry($order_id, $p_id) {
         $order_matches_user = $this->orderMatchesUser($order_id);
         // Make sure this order belongs to the logged in user and throw an error if it doesn't
         if (!$order_matches_user) {
-            throw new NotFoundException(__('You are not authorized to modify this order'));
+            throw new UnauthorizedException(__('You are not authorized to modify this order'));
         }
 
         $entry = $this->Order->OrdersProducts->findProductEntry($order_id, $p_id);
@@ -197,8 +200,12 @@ class OrdersController extends AppController {
         return $this->redirect(array('controller' => 'orders', 'action' => 'view'));
     }
 
-    public function checkOut($order_id) {
+    public function checkOut($order_id=null) {
         $this->layout = 'bootstrap';
+
+        if (!$order_id) {
+            throw new NotFoundException(__('Invalid product'));
+        }
         if ($this->request->is('post')) {
             $this->Order->id = $order_id;
             // Save the POST data
@@ -212,7 +219,7 @@ class OrdersController extends AppController {
         // Make sure it checks if the order belongs to the logged in user
         $order_matches_user = $this->orderMatchesUser($order_id);
         if (!$order_matches_user) {
-            throw new NotFoundException(__('Unauthorized checkout attempt'));
+            throw new ForbiddenException(__('Unauthorized checkout attempt'));
         }
 
         $order_total = 0;
@@ -234,7 +241,7 @@ class OrdersController extends AppController {
         // Make sure it checks if the order belongs to the logged in user
         $order_matches_user = $this->orderMatchesUser($order_id);
         if (!$order_matches_user) {
-            throw new NotFoundException(__('Unauthorized attempted order submission'));
+            throw new ForbiddenException(__('Unauthorized attempted order submission'));
         }
         $order = $this->Order->findById($order_id);
         $formmated_total = $this->getOrderTotal($order, $as_float=True);
@@ -265,12 +272,18 @@ class OrdersController extends AppController {
         $this->set('loggedIn', $this->Auth->loggedIn());
     }
 
-    public function viewOrder($order_id) {
+    public function viewOrder($order_id=null) {
         $this->layout = 'bootstrap';
-        $order_matches_user = $this->orderMatchesUser($order_id);
+
+        if (!$order_id) {
+            throw new NotFoundException(__('Invalid product'));
+        }
+        
+        $order_matches_user = $this->orderMatchesUser($order_id, $status='closed');
         if (!$order_matches_user) {
             throw new NotFoundException(__('Unauthorized attempt to view order'));
         }
+
         $order = $this->Order->findById($order_id);
         $this->set('order', $order);
         $this->set('loggedIn', $this->Auth->loggedIn());

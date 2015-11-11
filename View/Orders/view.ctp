@@ -1,4 +1,4 @@
-<?php if (!$order['Product']): ?>
+<?php if ($empty): ?>
 	<h2>Your cart is empty</h2>
 	<h4><?php echo $this->Html->link('Return to shopping', array('controller' => 'products', 'action' => 'index')); ?></h4>
 <?php else: ?>

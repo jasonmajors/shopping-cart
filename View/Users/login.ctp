@@ -5,7 +5,7 @@
 		<?php echo __('Please enter your username and password'); ?>
 	</legend>
 	<?php 
-		echo $this->Form->input('username');
+		echo $this->Form->input('email');
 		echo $this->Form->input('password');	
 	?>
 </fieldset>

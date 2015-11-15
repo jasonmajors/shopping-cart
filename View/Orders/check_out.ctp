@@ -1,5 +1,5 @@
 <h1>Checkout</h1>
-<h2>Review Your Order</h2>
+<h2>Your items</h2>
 <table class='table'>
 	<tr>
 		<th>Product</th>
@@ -17,6 +17,7 @@
 	<?php endforeach; ?>	
 </table>
 <p><?php echo "Total: $$total"; ?></p>
+<h2>Billing Information</h2>
 <?php 
 	/* Array of the state initials for the dropdown select menu
 	$states = array(

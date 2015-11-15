@@ -12,7 +12,7 @@ class UsersController extends AppController {
     public function login() {
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
-                return $this->redirect(array('controller' => 'products', 'action' => 'index'));
+                return $this->redirect(array('controller' => 'products', 'action' => 'index')   );
             }
             $this->Flash->set('Invalid username or password, please try again');
         }
@@ -27,7 +27,7 @@ class UsersController extends AppController {
             $this->User->create();
             if ($this->User->save($this->request->data)) {
                 $this->Flash->set('The user has been saved');
-                return $this->redirect(array('controller' => 'products', 'action' => 'index'));
+                return $this->redirect(array('controller' => 'users', 'action' => 'login'));
             }
             $this->Flash->set('The user could not be saved');   
         };

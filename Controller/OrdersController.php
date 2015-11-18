@@ -172,8 +172,11 @@ class OrdersController extends AppController {
                                 );
         if ($order) {
             $formmated_total = $this->getOrderTotal($order);
+            // Assuming 8.2% tax rate
+            $tax = ($this->getOrderTotal($order, $as_float=True)*0.082);
             $this->set('order', $order);
             $this->set('total', $formmated_total);
+            $this->set('tax', number_format((float)$tax, 2, '.', ','));
             $this->set('loggedIn', $this->Auth->loggedIn());
             $this->set('empty', False);
         } 
@@ -204,8 +207,14 @@ class OrdersController extends AppController {
         $this->layout = 'bootstrap';
 
         if (!$order_id) {
-            throw new NotFoundException(__('Invalid product'));
+            throw new NotFoundException(__('Order not found'));
         }
+        // Make sure it checks if the order belongs to the logged in user
+        $order_matches_user = $this->orderMatchesUser($order_id);
+        if (!$order_matches_user) {
+            throw new ForbiddenException(__('Unauthorized checkout attempt'));
+        }
+
         if ($this->request->is('post')) {
             $this->Order->id = $order_id;
             // Save the POST data
@@ -216,22 +225,20 @@ class OrdersController extends AppController {
                 return $this->redirect(array('controller' => 'products', 'action' => 'index'));
             }
         }
-        // Make sure it checks if the order belongs to the logged in user
-        $order_matches_user = $this->orderMatchesUser($order_id);
-        if (!$order_matches_user) {
-            throw new ForbiddenException(__('Unauthorized checkout attempt'));
-        }
-
-        $order_total = 0;
+        
         $order = $this->Order->findById($order_id);
 
         if (!$order) {
             throw new NotFoundException(__('Order not found'));
         }
+        // Data to prefill the checkout form
+        $this->request->data('Order.address', $this->Auth->user('address'));
+        $this->request->data('Order.city', $this->Auth->user('city'));
+        $this->request->data('Order.state', $this->Auth->user('state'));
+        $this->request->data('Order.zipcode', $this->Auth->user('zipcode'));
 
         $formmated_total = $this->getOrderTotal($order);
 
-        //$this->set('total', $total);
         $this->set('order', $order);
         $this->set('total', $formmated_total);
         $this->set('loggedIn', $this->Auth->loggedIn());

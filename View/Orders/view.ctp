@@ -23,6 +23,8 @@
 		</tr>
 		<?php endforeach; ?>	
 	</table>
+	<p class='text-right'><?php echo "Tax: $$tax"; ?></p>
+	<p class='text-right'>Shipping: $0.00</p>
 	<p class='text-right'><?php echo "Total: $$total"; ?></p>
 	<h4><?php echo $this->Html->link('Continue to checkout', array('controller' => 'orders', 'action' => 'checkOut', $order['Order']['id'])); ?></h4>
 <?php endif; ?>

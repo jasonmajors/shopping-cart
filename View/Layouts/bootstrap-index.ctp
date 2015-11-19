@@ -24,9 +24,9 @@
 	
 	<?php echo $this->element('navbar'); ?>
 	<?php echo $this->element('carousel'); ?>
-
+	<?php echo $this->Flash->render(); ?>
 	<div class="container">
-		<?php echo $this->Session->flash(); ?>
+		
 
 		<?php echo $this->fetch('content'); ?>
 		<div id="footer">

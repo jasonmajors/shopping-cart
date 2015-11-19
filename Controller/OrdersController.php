@@ -1,10 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
 
-class OrdersController extends AppController {
-
+class OrdersController extends AppController 
+{
     // Helper function to check if the user already has an open order
-    private function checkForOpenOrderID($user_id) {
+    private function checkForOpenOrderID($user_id) 
+    {
         $order = $this->Order->find('all',
                                 array('conditions' => array('Order.user_id' => $user_id, 'Order.status' => 'open')
                                 )
@@ -19,7 +20,8 @@ class OrdersController extends AppController {
         }
     }
     // Quick helper function to check if an order matches the logged in user
-    private function orderMatchesUser($order_id, $status='open') {
+    private function orderMatchesUser($order_id, $status='open') 
+    {
         $user_id = $this->Auth->user('id');
         $order = $this->Order->findById($order_id);
 
@@ -30,7 +32,8 @@ class OrdersController extends AppController {
         }
     }
     // TODO: Has to be a better way to check this. Should query the orders_products table directly instead of looping through the data structure returned by the framework
-    private function isProductInOrder($order_id, $p_id) {
+    private function isProductInOrder($order_id, $p_id) 
+    {
         $order = $this->Order->findById($order_id);
         $products = $order['Product'];
         $product_found = False;
@@ -43,7 +46,8 @@ class OrdersController extends AppController {
         return $product_found;
     }
 
-    private function fetchProductQty($order_id, $p_id) {
+    private function fetchProductQty($order_id, $p_id) 
+    {
         // Method created in OrdersProducts. Returns the data array for the row in orders_products table given an order and product ID
         $entry = $this->Order->OrdersProducts->findProductEntry($order_id, $p_id);
         $current_qty = $entry[0]['OrdersProducts']['qty'];
@@ -52,7 +56,8 @@ class OrdersController extends AppController {
         return array($current_qty, $entry_id);
     }
     // Updates an already existing order
-    private function updateOrder($order_id, $p_id, $qty) {
+    private function updateOrder($order_id, $p_id, $qty) 
+    {
         // Check to see if the product they're adding is already in the order
         if ($this->isProductInOrder($order_id, $p_id)) {
             // Retrieve the current qty value and the id of the entry from orders_products table so we can update it
@@ -61,7 +66,8 @@ class OrdersController extends AppController {
             $data = array('id' => $entry_id, 'qty' => $current_qty + $qty);
             //TODO: Add fail case
             if ($this->Order->OrdersProducts->save($data)) {
-                $this->Flash->set('Order Updated!');
+                // Custom flash template created in ../lib/Cake/View/Elements/Flash/updated.ctp
+                $this->Flash->updated('Order updated - View your Shopping Cart');
                 
                 return $this->redirect(array('controller' => 'products', 'action' => 'index')); 
             }
@@ -81,33 +87,30 @@ class OrdersController extends AppController {
             $this->Order->saveField('modified', $date);
 
             if ($this->Order->saveAll()) {
-                $this->Flash->set('Order Updated');
+                $this->Flash->updated('Order updated - View your Shopping Cart');
                 return $this->redirect(array('controller' => 'products', 'action' => 'index'));
             }
-        } 
         // If the the validation rule in the OrdersProducts model failed
-        else {
+        } else {
             $this->Flash->set('Invalid item quantity');
             return $this->redirect(array('controller' => 'products', 'action' => 'index')); 
         }
     }
 
-    public function create() {
+    public function create() 
+    {
         if (!$this->request->data) {
             throw new NotFoundException(__('Invalid product or order'));
         }
         // Retrieve the product_id and qty from View/Product/Index.ctp POST request
         $p_id = $this->request->data['OrdersProducts']['product_id'];
         $qty = $this->request->data['OrdersProducts']['qty'];
-
         $user_id = $this->Auth->user('id');
-        $current_qty = 0;
         // Check to see if this user already has an open order
         $open_order_id = $this->checkForOpenOrderID($user_id);
         if ($open_order_id) {
            // User has an open order. Update it.
             $this->updateOrder($open_order_id, $p_id, $qty);
-
         } else {
             // No open order so we'll create an Order and add the Product
             $this->Order->create();
@@ -143,22 +146,24 @@ class OrdersController extends AppController {
         }
     }
     // Return the order total as string xx.xx unless $as_float is set to true
-    private function getOrderTotal($order, $as_float=False) {
+    private function getOrderTotal($order, $as_float=False) 
+    {
         $order_total = 0;
 
         foreach ($order['Product'] as $product) {
             $order_total = $order_total + ($product['price'] * $product['OrdersProducts']['qty']);
         }
         if ($as_float) {
-            $formmated_total = $order_total;
+            $total = $order_total;
+        } else {
+            // Cast the number to float then format it to xx.xx string
+            $total = number_format((float)$order_total,2, '.', ',');
         }
-        else {
-            $formmated_total = number_format((float)$order_total,2, '.', ',');
-        }
-        return $formmated_total;
+        return $total;
     }
 
-    public function view() {
+    public function view() 
+    {
         $this->layout = 'bootstrap';        
         $user_id = $this->Auth->user('id');
         // There will only be one open order so use 'first'
@@ -171,22 +176,23 @@ class OrdersController extends AppController {
                                     )
                                 );
         if ($order) {
-            $formmated_total = $this->getOrderTotal($order);
+            $subtotal = $this->getOrderTotal($order, $as_float=True);
             // Assuming 8.2% tax rate
             $tax = ($this->getOrderTotal($order, $as_float=True)*0.082);
+            $total = $subtotal + $tax;
+
             $this->set('order', $order);
-            $this->set('total', $formmated_total);
+            $this->set('subtotal', number_format((float)$subtotal, 2, '.', ','));
             $this->set('tax', number_format((float)$tax, 2, '.', ','));
-            $this->set('loggedIn', $this->Auth->loggedIn());
+            $this->set('total', number_format((float)$total, 2, '.', ','));
             $this->set('empty', False);
-        } 
-        else {
-            $this->set('loggedIn', $this->Auth->loggedIn());
+        } else {
             $this->set('empty', True);
         }
     }
 
-    public function deleteEntry($order_id, $p_id) {
+    public function deleteEntry($order_id, $p_id) 
+    {
         $order_matches_user = $this->orderMatchesUser($order_id);
         // Make sure this order belongs to the logged in user and throw an error if it doesn't
         if (!$order_matches_user) {
@@ -203,7 +209,8 @@ class OrdersController extends AppController {
         return $this->redirect(array('controller' => 'orders', 'action' => 'view'));
     }
 
-    public function checkOut($order_id=null) {
+    public function checkOut($order_id=null) 
+    {
         $this->layout = 'bootstrap';
 
         if (!$order_id) {
@@ -241,10 +248,10 @@ class OrdersController extends AppController {
 
         $this->set('order', $order);
         $this->set('total', $formmated_total);
-        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 
-    private function submitOrder($order_id) {
+    private function submitOrder($order_id) 
+    {
         // Make sure it checks if the order belongs to the logged in user
         $order_matches_user = $this->orderMatchesUser($order_id);
         if (!$order_matches_user) {
@@ -264,7 +271,8 @@ class OrdersController extends AppController {
         $this->Order->save();
     }
 
-    public function myOrders() {
+    public function myOrders() 
+    {
         $this->layout = 'bootstrap';
         $user_id = $this->Auth->user('id');
         $orders = $this->Order->find('all', array(
@@ -276,10 +284,10 @@ class OrdersController extends AppController {
                                 );
 
         $this->set('orders', $orders);
-        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 
-    public function viewOrder($order_id=null) {
+    public function viewOrder($order_id=null) 
+    {
         $this->layout = 'bootstrap';
 
         if (!$order_id) {
@@ -293,7 +301,6 @@ class OrdersController extends AppController {
 
         $order = $this->Order->findById($order_id);
         $this->set('order', $order);
-        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 }
 

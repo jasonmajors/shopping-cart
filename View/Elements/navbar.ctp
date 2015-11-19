@@ -12,7 +12,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         <li><?php echo $this->Html->link('Home', array('controller' => 'products', 'action' => 'index')); ?></li>
-      <?php if ($loggedIn): ?>
+      <?php if ($this->Session->read('loggedIn')): ?>
         <li><?php echo $this->Html->link('View Cart', array('controller' => 'orders', 'action' => 'view')); ?></li>
         <li><?php echo $this->Html->link('Orders', array('controller' => 'orders', 'action' => 'myOrders')); ?></li>
         <li><?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?></li>

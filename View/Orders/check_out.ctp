@@ -16,7 +16,10 @@
 	</tr>
 	<?php endforeach; ?>	
 </table>
-<p><?php echo "Total: $$total"; ?></p>
+<p class='text-right'>Subtotal: $<?php echo $order_totals['subtotal']; ?></p>
+<p class='text-right'>Tax: $<?php echo $order_totals['tax']; ?></p>
+<p class='text-right'>Shipping: $0.00</p>
+<p class='text-right'>Total: $ <?php echo $order_totals['total']; ?></p>
 <h2>Billing Information</h2>
 <?php 
 	/* Array of the state initials for the dropdown select menu

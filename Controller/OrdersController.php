@@ -136,7 +136,7 @@ class OrdersController extends AppController
                 // TODO: if->then
                 $this->Order->OrdersProducts->save($data);
 
-                $this->Flash->set('New Order Created');
+                $this->Flash->updated('New Order Created - View your Shopping Cart');
                 
                 return $this->redirect(array('controller' => 'products', 'action' => 'index'));
 
@@ -146,6 +146,8 @@ class OrdersController extends AppController
         }
     }
     // Return the order total as string xx.xx unless $as_float is set to true
+    // TODO: Refactor - have it return array('subtotal' => , 'tax' =>, 'total' =>)
+    // Replaceing this with getOrderTotalsArray()
     private function getOrderTotal($order, $as_float=False) 
     {
         $order_total = 0;
@@ -160,6 +162,25 @@ class OrdersController extends AppController
             $total = number_format((float)$order_total,2, '.', ',');
         }
         return $total;
+
+    }
+    // Returns an array containing the subtotal, tax, and total as a string in x,xxx.xx format
+    private function getOrderTotalsArray($order, $taxrate) {
+        $order_totals = array();
+        $subtotal = 0;
+
+        foreach ($order['Product'] as $product) {
+            $subtotal = $subtotal + ($product['price'] * $product['OrdersProducts']['qty']);
+        }
+
+        $tax = $subtotal * $taxrate;
+        $total = $subtotal + $tax;
+
+        $order_totals['tax'] = number_format((float)$tax, 2, '.', ',');
+        $order_totals['subtotal'] = number_format((float)$subtotal, 2, '.', ',');
+        $order_totals['total'] = number_format((float)$total, 2, '.', ',');
+
+        return $order_totals;
     }
 
     public function view() 
@@ -176,15 +197,10 @@ class OrdersController extends AppController
                                     )
                                 );
         if ($order) {
-            $subtotal = $this->getOrderTotal($order, $as_float=True);
-            // Assuming 8.2% tax rate
-            $tax = ($this->getOrderTotal($order, $as_float=True)*0.082);
-            $total = $subtotal + $tax;
+            $order_totals = $this->getOrderTotalsArray($order, $taxrate = 0.085);
 
             $this->set('order', $order);
-            $this->set('subtotal', number_format((float)$subtotal, 2, '.', ','));
-            $this->set('tax', number_format((float)$tax, 2, '.', ','));
-            $this->set('total', number_format((float)$total, 2, '.', ','));
+            $this->set('order_totals', $order_totals);
             $this->set('empty', False);
         } else {
             $this->set('empty', True);
@@ -221,7 +237,7 @@ class OrdersController extends AppController
         if (!$order_matches_user) {
             throw new ForbiddenException(__('Unauthorized checkout attempt'));
         }
-
+        // Check for submission
         if ($this->request->is('post')) {
             $this->Order->id = $order_id;
             // Save the POST data
@@ -232,7 +248,7 @@ class OrdersController extends AppController
                 return $this->redirect(array('controller' => 'products', 'action' => 'index'));
             }
         }
-        
+        // Display the form
         $order = $this->Order->findById($order_id);
 
         if (!$order) {
@@ -244,10 +260,10 @@ class OrdersController extends AppController
         $this->request->data('Order.state', $this->Auth->user('state'));
         $this->request->data('Order.zipcode', $this->Auth->user('zipcode'));
 
-        $formmated_total = $this->getOrderTotal($order);
+        $order_totals = $this->getOrderTotalsArray($order, 0.085);
 
         $this->set('order', $order);
-        $this->set('total', $formmated_total);
+        $this->set('order_totals', $order_totals);
     }
 
     private function submitOrder($order_id) 
@@ -258,13 +274,13 @@ class OrdersController extends AppController
             throw new ForbiddenException(__('Unauthorized attempted order submission'));
         }
         $order = $this->Order->findById($order_id);
-        $formmated_total = $this->getOrderTotal($order, $as_float=True);
+        $order_totals = $this->getOrderTotalsArray($order, $taxrate=0.085);
 
         $this->Order->id = $order_id;
         // Set the modified date to the date the order is placed and close the order
         $this->Order->set(array(
             'modified' => date('Y-m-d H:i:s'),
-            'total' => $formmated_total,
+            'total' => $order_totals['total'],
             'status' => 'closed'
             )
         );

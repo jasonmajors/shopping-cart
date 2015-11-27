@@ -45,7 +45,7 @@ class OrdersController extends AppController
         }
         return $product_found;
     }
-
+    // Retrieves an array containing the qty of an entry in the orders_products table and the primary key of the entry (the id)
     private function fetchProductQty($order_id, $p_id) 
     {
         // Method created in OrdersProducts. Returns the data array for the row in orders_products table given an order and product ID
@@ -255,10 +255,10 @@ class OrdersController extends AppController
             throw new NotFoundException(__('Order not found'));
         }
         // Data to prefill the checkout form
-        $this->request->data('Order.address', $this->Auth->user('address'));
-        $this->request->data('Order.city', $this->Auth->user('city'));
-        $this->request->data('Order.state', $this->Auth->user('state'));
-        $this->request->data('Order.zipcode', $this->Auth->user('zipcode'));
+        $this->request->data('Order.shipping_address', $this->Auth->user('address'));
+        $this->request->data('Order.shipping_city', $this->Auth->user('city'));
+        $this->request->data('Order.shipping_state', $this->Auth->user('state'));
+        $this->request->data('Order.shipping_zipcode', $this->Auth->user('zipcode'));
 
         $order_totals = $this->getOrderTotalsArray($order, 0.085);
 

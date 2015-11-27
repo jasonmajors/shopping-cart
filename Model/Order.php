@@ -1,11 +1,11 @@
 <?php
 class Order extends AppModel {
 	public $validate = array(
-		'zipcode' => array(
+		'shipping_zipcode' => array(
 			'rule' => array('lengthBetween', 5, 5),
 			'message' => 'Zipcode must be 5 digits'
 		),
-		'address' => array(
+		'shipping_address' => array(
 			'rule' => 'notBlank',
 		),
 	);

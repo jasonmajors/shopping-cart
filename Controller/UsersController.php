@@ -15,7 +15,10 @@ class UsersController extends AppController
     {
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
+                // Saving 'loggedIn' the session so we can check if a user is logged in from the navbar element
+                // Alternatively, we could pass a loggedIn variable to each view from the controller
                 $this->Session->write('loggedIn', True);
+                $this->Session->write('name', $this->Auth->user('firstname')); 
                 return $this->redirect(array('controller' => 'products', 'action' => 'index')   );
             }
             $this->Flash->set('Invalid username or password, please try again');

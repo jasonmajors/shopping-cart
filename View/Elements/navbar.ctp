@@ -16,6 +16,7 @@
         <li><?php echo $this->Html->link('View Cart', array('controller' => 'orders', 'action' => 'view')); ?></li>
         <li><?php echo $this->Html->link('Orders', array('controller' => 'orders', 'action' => 'myOrders')); ?></li>
         <li><?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?></li>
+        <!-- <li>Hello, <?php echo $this->Session->read('name'); ?></li> -->  
       <?php else: ?>
         <li><?php echo $this->Html->link('Login', array('controller' => 'users', 'action' => 'login')); ?></li>
         <li><?php echo $this->Html->link('Register', array('controller' => 'users', 'action' => 'add')); ?></li>

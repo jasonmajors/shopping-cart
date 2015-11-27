@@ -1,23 +1,24 @@
 <?php
 App::uses('AppController', 'Controller');
 
-class ProductsController extends AppController {
+class ProductsController extends AppController 
+{
     public $helpers = array('Html', 'Form');
 
-    public function beforeFilter() {
+    public function beforeFilter() 
+    {
         parent::beforeFilter();
         $this->Auth->allow('view');
     }
 
-    public function index() {
+    public function index() 
+    {
         $this->layout = 'bootstrap-index';
-        
-        $this->set('user_id', $this->Auth->user('id'));
         $this->set('products', $this->Product->find('all'));
-        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 
-    public function view($id=null) {
+    public function view($id=null) 
+    {
         $this->layout = 'bootstrap';
         if (!$id) {
             throw new NotFoundException(__('Invalid product'));

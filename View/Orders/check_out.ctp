@@ -20,7 +20,7 @@
 <p class='text-right'>Tax: $<?php echo $order_totals['tax']; ?></p>
 <p class='text-right'>Shipping: $0.00</p>
 <p class='text-right'>Total: $ <?php echo $order_totals['total']; ?></p>
-<h2>Billing Information</h2>
+<h2>Shipping Information</h2>
 <?php 
 	/* Array of the state initials for the dropdown select menu
 	$states = array(
@@ -28,12 +28,21 @@
 		)
 	*/
 ?>
-<?php 
-	echo $this->Form->create('Order'); 
-	echo $this->Form->input('address');
-	echo $this->Form->input('city');
-	echo $this->Form->input('state');
-	echo $this->Form->input('zipcode');
-	echo $this->Form->end('Place Order');
-?>
-
+<div class='col-md-6'>
+<?php echo $this->Form->create('Order'); ?>
+	<div class='form-group'> 
+<?php echo $this->Form->input('Order.shipping_address', array('label' => 'Address', 'class' => 'form-control')); ?>
+	</div>
+	<div class='form-group'>
+<?php echo $this->Form->input('Order.shipping_city', array('label' => 'City', 'class' => 'form-control')); ?>
+	</div>
+	<div class='form-group'>
+<?php echo $this->Form->input('Order.shipping_state', array('label' => 'State', 'class' => 'form-control')); ?>
+	</div>
+	<div class='form-group'>
+<?php echo $this->Form->input('Order.shipping_zipcode', array('label' => 'Zipcode', 'class' => 'form-control')); ?>
+	</div>
+	<div class='form-group'>
+<?php echo $this->Form->end('Place Order'); ?>
+	</div>
+</div>

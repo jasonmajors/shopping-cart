@@ -145,25 +145,6 @@ class OrdersController extends AppController
             }
         }
     }
-    // Return the order total as string xx.xx unless $as_float is set to true
-    // TODO: Refactor - have it return array('subtotal' => , 'tax' =>, 'total' =>)
-    // Replaceing this with getOrderTotalsArray()
-    private function getOrderTotal($order, $as_float=False) 
-    {
-        $order_total = 0;
-
-        foreach ($order['Product'] as $product) {
-            $order_total = $order_total + ($product['price'] * $product['OrdersProducts']['qty']);
-        }
-        if ($as_float) {
-            $total = $order_total;
-        } else {
-            // Cast the number to float then format it to xx.xx string
-            $total = number_format((float)$order_total,2, '.', ',');
-        }
-        return $total;
-
-    }
     // Returns an array containing the subtotal, tax, and total as a string in x,xxx.xx format
     private function getOrderTotalsArray($order, $taxrate) {
         $order_totals = array();
@@ -255,6 +236,8 @@ class OrdersController extends AppController
             throw new NotFoundException(__('Order not found'));
         }
         // Data to prefill the checkout form
+        $this->request->data('Order.shipping_firstname', $this->Auth->user('firstname'));
+        $this->request->data('Order.shipping_lastname', $this->Auth->user('lastname'));
         $this->request->data('Order.shipping_address', $this->Auth->user('address'));
         $this->request->data('Order.shipping_city', $this->Auth->user('city'));
         $this->request->data('Order.shipping_state', $this->Auth->user('state'));
@@ -280,7 +263,8 @@ class OrdersController extends AppController
         // Set the modified date to the date the order is placed and close the order
         $this->Order->set(array(
             'modified' => date('Y-m-d H:i:s'),
-            'total' => $order_totals['total'],
+            // $orders_totals['total'] is a string value of the total. Need to remove the "," and cast to float to store it as a decimal in the db
+            'total' => (float)str_replace(",", "", $order_totals['total']),
             'status' => 'closed'
             )
         );

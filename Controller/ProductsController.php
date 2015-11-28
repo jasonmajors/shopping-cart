@@ -17,6 +17,12 @@ class ProductsController extends AppController
         $this->set('products', $this->Product->find('all'));
     }
 
+    public function browse()
+    {
+        $this->layout = 'bootstrap';
+        $this->set('products', $this->Product->find('all'));
+    }
+
     public function view($id=null) 
     {
         $this->layout = 'bootstrap';
@@ -30,7 +36,6 @@ class ProductsController extends AppController
         }
 
         $this->set('product', $product);
-        $this->set('loggedIn', $this->Auth->loggedIn());
     }
 };
     

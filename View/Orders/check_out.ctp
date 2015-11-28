@@ -19,7 +19,7 @@
 <p class='text-right'>Subtotal: $<?php echo $order_totals['subtotal']; ?></p>
 <p class='text-right'>Tax: $<?php echo $order_totals['tax']; ?></p>
 <p class='text-right'>Shipping: $0.00</p>
-<p class='text-right'>Total: $ <?php echo $order_totals['total']; ?></p>
+<p class='text-right'>Total: $<?php echo $order_totals['total']; ?></p>
 <h2>Shipping Information</h2>
 <?php 
 	/* Array of the state initials for the dropdown select menu
@@ -28,8 +28,14 @@
 		)
 	*/
 ?>
-<div class='col-md-6'>
+<div class='col-md-4'>
 <?php echo $this->Form->create('Order'); ?>
+	<div class='form-group'> 
+<?php echo $this->Form->input('Order.shipping_firstname', array('label' => 'First Name', 'class' => 'form-control')); ?>
+	</div>
+	<div class='form-group'> 
+<?php echo $this->Form->input('Order.shipping_lastname', array('label' => 'Last Name', 'class' => 'form-control')); ?>
+	</div>
 	<div class='form-group'> 
 <?php echo $this->Form->input('Order.shipping_address', array('label' => 'Address', 'class' => 'form-control')); ?>
 	</div>

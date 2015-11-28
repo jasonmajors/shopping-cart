@@ -12,9 +12,8 @@
 		echo $this->Html->meta('icon');
 		echo $this->Html->css('bootstrap.min.css');
 		echo $this->Html->css('carousel.css');
+		echo $this->Html->css('signin.css');
 		
-		
-
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');

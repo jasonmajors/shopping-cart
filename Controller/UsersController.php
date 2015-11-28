@@ -13,6 +13,7 @@ class UsersController extends AppController
 
     public function login() 
     {
+        $this->layout = 'bootstrap';
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
                 // Saving 'loggedIn' the session so we can check if a user is logged in from the navbar element

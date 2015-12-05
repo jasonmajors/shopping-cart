@@ -242,6 +242,12 @@ class OrdersController extends AppController
         $this->request->data('Order.shipping_city', $this->Auth->user('city'));
         $this->request->data('Order.shipping_state', $this->Auth->user('state'));
         $this->request->data('Order.shipping_zipcode', $this->Auth->user('zipcode'));
+        $this->request->data('Order.billing_firstname', $this->Auth->user('firstname'));
+        $this->request->data('Order.billing_lastname', $this->Auth->user('lastname'));
+        $this->request->data('Order.billing_address', $this->Auth->user('address'));
+        $this->request->data('Order.billing_city', $this->Auth->user('city'));
+        $this->request->data('Order.billing_state', $this->Auth->user('state'));
+        $this->request->data('Order.billing_zipcode', $this->Auth->user('zipcode'));
 
         $order_totals = $this->getOrderTotalsArray($order, 0.085);
 

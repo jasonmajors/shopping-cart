@@ -275,14 +275,16 @@ class OrdersController extends AppController
     {
         $this->layout = 'bootstrap';
         $user_id = $this->Auth->user('id');
-        $orders = $this->Order->find('all', array(
-                                        'conditions' => array(
-                                            'Order.user_id' => $user_id,
-                                            'Order.status' => 'closed'
-                                        )
-                                    )
-                                );
-
+        $this->Paginator->settings = array(
+            'conditions' => array(
+                            'Order.user_id' => $user_id,
+                            'Order.status' => 'closed' 
+                        ),
+            'limit' => 10,
+            'order' => array('modified' => 'desc')
+        );  
+       
+        $orders = $this->paginate('Order');
         $this->set('orders', $orders);
     }
 

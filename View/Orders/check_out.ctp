@@ -29,26 +29,55 @@
 	*/
 ?>
 <div class='col-md-4'>
-<?php echo $this->Form->create('Order'); ?>
+		<?php echo $this->Form->create('Order'); ?>
 	<div class='form-group'> 
-<?php echo $this->Form->input('Order.shipping_firstname', array('label' => 'First Name', 'class' => 'form-control')); ?>
+		<?php echo $this->Form->input('Order.shipping_firstname', array('label' => 'First Name', 'class' => 'form-control')); ?>
 	</div>
+	<div class='form-group'>
+		<?php echo $this->Form->input('Order.shipping_lastname', array('label' => 'Last Name', 'class' => 'form-control')); ?>
+	</div>
+</div>
+<div class='col-md-4'>	
 	<div class='form-group'> 
-<?php echo $this->Form->input('Order.shipping_lastname', array('label' => 'Last Name', 'class' => 'form-control')); ?>
+		<?php echo $this->Form->input('Order.shipping_address', array('label' => 'Address', 'class' => 'form-control')); ?>
 	</div>
+	<div class='form-group'>
+		<?php echo $this->Form->input('Order.shipping_city', array('label' => 'City', 'class' => 'form-control')); ?>
+	</div>
+</div>
+<div class='col-md-4'>	
+	<div class='form-group'>
+		<?php echo $this->Form->input('Order.shipping_state', array('label' => 'State', 'class' => 'form-control')); ?>
+	</div>
+	<div class='form-group'>
+		<?php echo $this->Form->input('Order.shipping_zipcode', array('label' => 'Zipcode', 'class' => 'form-control')); ?>
+	</div>
+</div>
+<h2>Billing Information</h2>
+<div class='col-md-4'>
+	<div class='form-group'>
+		<?php echo $this->Form->input('Order.billing_firstname', array('label' => 'First Name', 'class' => 'form-control')); ?>
+	</div>
+	<div class='form-group'>
+		<?php echo $this->Form->input('Order.billing_lastname', array('label' => 'Last Name', 'class' => 'form-control')); ?>
+	</div>
+</div>
+<div class='col-md-4'>	
 	<div class='form-group'> 
-<?php echo $this->Form->input('Order.shipping_address', array('label' => 'Address', 'class' => 'form-control')); ?>
+		<?php echo $this->Form->input('Order.billing_address', array('label' => 'Address', 'class' => 'form-control')); ?>
 	</div>
 	<div class='form-group'>
-<?php echo $this->Form->input('Order.shipping_city', array('label' => 'City', 'class' => 'form-control')); ?>
+		<?php echo $this->Form->input('Order.billing_city', array('label' => 'City', 'class' => 'form-control')); ?>
+	</div>
+</div>
+<div class='col-md-4'>	
+	<div class='form-group'>
+		<?php echo $this->Form->input('Order.billing_state', array('label' => 'State', 'class' => 'form-control')); ?>
 	</div>
 	<div class='form-group'>
-<?php echo $this->Form->input('Order.shipping_state', array('label' => 'State', 'class' => 'form-control')); ?>
+		<?php echo $this->Form->input('Order.billing_zipcode', array('label' => 'Zipcode', 'class' => 'form-control')); ?>
 	</div>
 	<div class='form-group'>
-<?php echo $this->Form->input('Order.shipping_zipcode', array('label' => 'Zipcode', 'class' => 'form-control')); ?>
-	</div>
-	<div class='form-group'>
-<?php echo $this->Form->end('Place Order'); ?>
+		<input class="btn btn-lg btn-primary" type="submit" value="Place Order">
 	</div>
 </div>

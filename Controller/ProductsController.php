@@ -2,13 +2,11 @@
 App::uses('AppController', 'Controller');
 
 class ProductsController extends AppController 
-{
-    public $helpers = array('Html', 'Form');
-
+{   
     public function beforeFilter() 
     {
         parent::beforeFilter();
-        $this->Auth->allow('view');
+        $this->Auth->allow('view', 'browse');
     }
 
     public function index() 
@@ -20,7 +18,14 @@ class ProductsController extends AppController
     public function browse()
     {
         $this->layout = 'bootstrap';
-        $this->set('products', $this->Product->find('all'));
+
+        $this->paginate = array(
+            'limit' => 3,
+            'order' => array('name' => 'asc')
+        );
+
+        $products = $this->paginate('Product');
+        $this->set('products', $products);
     }
 
     public function view($id=null) 

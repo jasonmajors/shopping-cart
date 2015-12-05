@@ -17,4 +17,4 @@
 	</tr>
 	<?php endforeach; ?>	
 </table>
-<p>Total: $<?php echo $order['Order']['total']; ?></p>
+<p>Total: $<?php echo number_format((float)$order['Order']['total'],2, '.', ','); ?></p>

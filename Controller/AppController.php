@@ -55,7 +55,14 @@ class AppController extends Controller
 		)
 	);
 
-	public function beforeFilter() {
+	public function beforeFilter() 
+	{
 		$this->Auth->allow('index');
+	}
+
+	public function beforeRender()
+	{
+		$firstname = $this->Auth->user('firstname');
+		$this->set('firstname', $firstname);
 	}
 }

@@ -10,6 +10,7 @@
 			<th>Description</th>
 			<th>Price</th>
 			<th>Qty</th>
+			<th>Item Total</th>
 			<th>Remove</th>
 		</tr>
 		<?php foreach ($order['Product'] as $product): ?>
@@ -19,6 +20,7 @@
 			<td><?php echo $product['description']; ?></td>
 			<td><?php echo '$' . $product['price'];	?></td>
 			<td><?php echo $product['OrdersProducts']['qty']; ?></td>
+			<td><?php echo '$' . number_format((float)($product['OrdersProducts']['qty'] * $product['price']),2, '.', ','); ?></td>
 			<td><?php echo $this->Html->link('Remove', array('controller' => 'orders', 'action' => 'deleteEntry', $order['Order']['id'], $product['id'])); ?></td>
 		</tr>
 		<?php endforeach; ?>	

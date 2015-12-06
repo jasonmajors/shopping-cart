@@ -21,13 +21,8 @@
 <p class='text-right'>Shipping: $0.00</p>
 <p class='text-right'>Total: $<?php echo $order_totals['total']; ?></p>
 <h2>Shipping Information</h2>
-<?php 
-	/* Array of the state initials for the dropdown select menu
-	$states = array(
+<p class='text-muted'>Please verify your shipping information</p>
 
-		)
-	*/
-?>
 <div class='col-md-4'>
 		<?php echo $this->Form->create('Order'); ?>
 	<div class='form-group'> 
@@ -54,6 +49,7 @@
 	</div>
 </div>
 <h2>Billing Information</h2>
+<p class='text-muted'>Please verify your billing information</p>
 <div class='col-md-4'>
 	<div class='form-group'>
 		<?php echo $this->Form->input('Order.billing_firstname', array('label' => 'First Name', 'class' => 'form-control')); ?>
@@ -77,7 +73,7 @@
 	<div class='form-group'>
 		<?php echo $this->Form->input('Order.billing_zipcode', array('label' => 'Zipcode', 'class' => 'form-control')); ?>
 	</div>
-	<div class='form-group'>
+	<div class='form-group pull-right'>
 		<input class="btn btn-lg btn-primary" type="submit" value="Place Order">
 	</div>
 </div>

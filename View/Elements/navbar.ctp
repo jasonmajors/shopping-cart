@@ -7,16 +7,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <span class="navbar-brand">Majors Outdoor Emporium</span>
+      <?php echo $this->Html->link("Majors' Outdoor Emporium", array('controller' => 'products', 'action' => 'index'), array('class' => 'navbar-brand')); ?>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><?php echo $this->Html->link('Home', array('controller' => 'products', 'action' => 'index')); ?></li>
       <?php if ($this->Session->read('loggedIn')): ?>
+      <!-- Hacky temp solution to get the same css as the links -->
+        <li><?php echo "<a>Hail, {$firstname}</a>"; ?></li>
         <li><?php echo $this->Html->link('View Cart', array('controller' => 'orders', 'action' => 'view')); ?></li>
         <li><?php echo $this->Html->link('Orders', array('controller' => 'orders', 'action' => 'myOrders')); ?></li>
         <li><?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?></li>
-        <!-- <li>Hello, <?php echo $this->Session->read('name'); ?></li> -->  
       <?php else: ?>
         <li><?php echo $this->Html->link('Login', array('controller' => 'users', 'action' => 'login')); ?></li>
         <li><?php echo $this->Html->link('Register', array('controller' => 'users', 'action' => 'add')); ?></li>

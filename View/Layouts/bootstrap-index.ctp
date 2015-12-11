@@ -24,11 +24,9 @@
 	<?php echo $this->element('carousel'); ?>
 	<?php echo $this->Flash->render(); ?>
 	<div class="container">
-		
-
 		<?php echo $this->fetch('content'); ?>
 		<div id="footer">
-		<!-- placeholder -->
+		<?php echo $this->element('contact'); ?>
 		</div>
 	</div>
 </body>
@@ -36,6 +34,5 @@
 	echo $this->Html->script('jquery');
 	echo $this->Html->script('bootstrap.min'); 
 	
-	//echo $this->Html->script('filter-data');
 ?>
 </html>

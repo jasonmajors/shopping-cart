@@ -26,7 +26,7 @@
 
 		<?php echo $this->fetch('content'); ?>
 		<div id="footer">
-		<!-- placeholder -->
+		<?php echo $this->fetch('footer'); ?>
 		</div>
 	</div>
 </body>

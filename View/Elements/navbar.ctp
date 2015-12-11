@@ -14,8 +14,8 @@
       <?php if ($this->Session->read('loggedIn')): ?>
       <!-- Hacky temp solution to get the same css as the links -->
         <li><?php echo "<a>Hail, {$firstname}</a>"; ?></li>
-        <li><?php echo $this->Html->link('View Cart', array('controller' => 'orders', 'action' => 'view')); ?></li>
-        <li><?php echo $this->Html->link('Orders', array('controller' => 'orders', 'action' => 'myOrders')); ?></li>
+        <li><?php echo $this->Html->link('My Cart', array('controller' => 'orders', 'action' => 'view')); ?></li>
+        <li><?php echo $this->Html->link('My Orders', array('controller' => 'orders', 'action' => 'myOrders')); ?></li>
         <li><?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?></li>
       <?php else: ?>
         <li><?php echo $this->Html->link('Login', array('controller' => 'users', 'action' => 'login')); ?></li>

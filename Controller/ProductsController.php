@@ -12,6 +12,11 @@ class ProductsController extends AppController
     public function index() 
     {
         $this->layout = 'bootstrap-index';
+        // Can change the category
+        $featured_category_one = $this->Product->find('all',
+                                                array('conditions' => array('category' => 'kayak'))
+                                            );
+        $this->set('featured_category_one', $featured_category_one);
         $this->set('products', $this->Product->find('all'));
     }
 
@@ -30,7 +35,7 @@ class ProductsController extends AppController
 
     public function view($id=null) 
     {
-        $this->layout = 'bootstrap';
+        $this->layout = 'product';
         if (!$id) {
             throw new NotFoundException(__('Invalid product'));
         }

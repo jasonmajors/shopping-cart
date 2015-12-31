@@ -1,3 +1,18 @@
+<h1>Featured Kayaks</h1>
+<div class="row">
+  <?php foreach($featured_category_one as $featured): ?>
+    <div class="card">
+      <?php echo $this->Html->image('http://placehold.it/350x350', array(
+                    'alt' => 'Product Image',
+                    'url' => array('controller' => 'products', 'action' => 'view', $featured['Product']['id'])
+                    )
+                  );
+      ?>
+      <p class="card-text"><?php echo $featured['Product']['name']; ?></p>
+    </div>
+  <?php endforeach; ?>
+</div>  
+
 <h1>Available Products</h1>
 <table class='table'>
     <tr>

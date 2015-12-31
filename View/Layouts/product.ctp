@@ -12,7 +12,6 @@
 		echo $this->Html->meta('icon');
 		echo $this->Html->css('bootstrap.min.css');
 		echo $this->Html->css('carousel.css');
-		echo $this->Html->css('products.css');
 		
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
@@ -22,12 +21,12 @@
 <body>
 	
 	<?php echo $this->element('navbar'); ?>
-	<?php echo $this->element('carousel'); ?>
-	<?php echo $this->Flash->render(); ?>
-	<div class="container">
+	<div class="container-fluid">
+		<?php echo $this->Flash->render(); ?>
+
 		<?php echo $this->fetch('content'); ?>
 		<div id="footer">
-		<?php echo $this->element('contact'); ?>
+
 		</div>
 	</div>
 </body>

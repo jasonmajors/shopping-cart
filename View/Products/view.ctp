@@ -1,7 +1,10 @@
 <div class='row-fluid'>
     <!-- Display product img -->
     <div class='col-lg-4'>
-    <?php echo $this->Html->image($product['Product']['id'] . '.jpg', array('alt' => 'Product Image')); ?>
+    <?php echo $this->Html->image($product['Product']['id'] . '.jpg', array(
+                                                                    'alt' => 'Product Image',
+                                                                    'class' => 'img-responsive')
+                                                                ); ?>
     <!-- end product img -->
     </div>
     <div class='col-lg-6'>

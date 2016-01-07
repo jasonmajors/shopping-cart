@@ -16,7 +16,13 @@ class ProductsController extends AppController
         $featured_category_one = $this->Product->find('all',
                                                 array('conditions' => array('category' => 'kayak'))
                                             );
+        
+        $featured_category_two = $this->Product->find('all',
+                                                array('conditions' => array('category' => 'camera'))
+                                            );
+
         $this->set('featured_category_one', $featured_category_one);
+        $this->set('featured_category_two', $featured_category_two);
         $this->set('products', $this->Product->find('all'));
     }
 

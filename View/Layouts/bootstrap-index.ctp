@@ -22,7 +22,9 @@
 <body>
 	
 	<?php echo $this->element('navbar'); ?>
+	<div class='container-fluid'>
 	<?php echo $this->element('carousel'); ?>
+	</div>
 	<?php echo $this->Flash->render(); ?>
 	<div class="container">
 		<?php echo $this->fetch('content'); ?>

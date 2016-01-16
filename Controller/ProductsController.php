@@ -21,9 +21,13 @@ class ProductsController extends AppController
                                                 array('conditions' => array('category' => 'camera'))
                                             );
 
+        $featured_category_three = $this->Product->find('all',
+                                                array('conditions' => array('category' => 'backpack'))
+                                            );
+
         $this->set('featured_category_one', $featured_category_one);
         $this->set('featured_category_two', $featured_category_two);
-        $this->set('products', $this->Product->find('all'));
+        $this->set('featured_category_three', $featured_category_three);
     }
 
     public function browse()
@@ -31,7 +35,7 @@ class ProductsController extends AppController
         $this->layout = 'bootstrap';
 
         $this->paginate = array(
-            'limit' => 3,
+            'limit' => 10,
             'order' => array('name' => 'asc')
         );
 

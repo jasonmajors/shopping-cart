@@ -9,7 +9,7 @@
     </div>
     <div class='col-lg-6'>
         <h1><?php echo $product['Product']['name']; ?></h1>
-        <p>Price: $<span><?php echo number_format((float)$product['Product']['price'],2, '.', ','); ?></span></p>
+        <h4>Price: $<span><?php echo number_format((float)$product['Product']['price'],2, '.', ','); ?></span></h4>
         <!-- Product highlights -->
         <ul>
             <?php 

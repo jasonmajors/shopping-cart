@@ -31,4 +31,4 @@
 										'class' => 'btn btn-lg btn-primary btn-block'
 									)
 								); ?>
-	
+<h5 class="text-right"><?php echo $this->Html->link('No account? Register', array('controller' => 'user', 'action' => 'register')); ?></h5>

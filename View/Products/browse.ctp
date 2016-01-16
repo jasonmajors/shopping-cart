@@ -1,10 +1,9 @@
 <h1>Available Products</h1>
 <table class='table'>
     <tr>
-        <?php echo '<th>' . $paginator->sort('name', 'Product') . '</th>'; ?>
-        <?php echo '<th>' . $paginator->sort('description', 'Description') . '</th>'; ?>
-        <?php echo '<th>' . $paginator->sort('price', 'Price') . '</th>'; ?>
-        <th>Add to Cart</th>
+        <?php echo '<th>' . $this->paginator->sort('name', 'Product') . '</th>'; ?>
+        <?php echo '<th>' . $this->paginator->sort('description', 'Description') . '</th>'; ?>
+        <?php echo '<th>' . $this->paginator->sort('price', 'Price') . '</th>'; ?>
     </tr>
     <?php foreach ($products as $product): ?>
     <tr>
@@ -17,29 +16,6 @@
         </td>
         <td><?php echo $product['Product']['description']; ?></td>
         <td><?php echo "$$price"; ?></td>
-        <td>
-            <?php echo $this->Form->create('OrdersProducts', array( 
-                                                    'class' => 'form-inline',
-                                                    'url' => array('controller' => 'orders', 'action' => 'create'),
-                                                    'inputDefaults' => array(
-                                                        'label' => false,
-                                                    )
-                                                )
-                                            ); 
-                                        ?>
-            <div class='form-group'>                            
-            <?php echo $this->Form->input('qty'); ?>
-            </div>
-            <?php echo $this->Form->input('product_id', array('default' => $product['Product']['id'], 'type' => 'hidden')); ?>
-            <!-- order_id will be retrieved in the create() method -->
-            <div class='form-group'>
-            <?php echo $this->Form->end(array(
-                                            'label' => 'Add',
-                                        )
-                                    ); 
-                                ?>
-            </div>
-        </td>
     </tr>
     <?php endforeach; ?>    
 </table>

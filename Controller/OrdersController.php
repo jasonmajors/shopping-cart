@@ -198,6 +198,13 @@ class OrdersController extends AppController
 
         $entry = $this->Order->OrdersProducts->findProductEntry($order_id, $p_id);
         $this->Order->OrdersProducts->delete($id = $entry[0]['OrdersProducts']['id']);
+
+        $order = $this->Order->findById($order_id);
+        // Delete the order if the sole product is removed
+        if (empty($order['Product'])) {
+            $this->Order->delete($id = $order_id);
+            return $this->redirect(array('controller' => 'orders', 'action' => 'view'));
+        }
         // Update the orders table modified column
         $date = date('Y-m-d H:i:s');
         $this->Order->id = $order_id;

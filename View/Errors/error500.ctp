@@ -13,8 +13,9 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+$this->layout = 'my-errors'; 
 ?>
-<h2><?php echo $message; ?></h2>
+<h1 class="text-center"><?php echo $message; ?></h1>
 <p class="error">
 	<strong><?php echo __d('cake', 'Error'); ?>: </strong>
 	<?php echo __d('cake', 'An Internal Error Has Occurred.'); ?>

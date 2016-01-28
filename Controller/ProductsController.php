@@ -47,12 +47,12 @@ class ProductsController extends AppController
     {
         $this->layout = 'product';
         if (!$id) {
-            throw new NotFoundException(__('Invalid product'));
+            throw new NotFoundException(__('Product not found'));
         }
 
         $product = $this->Product->findById($id);
         if (!$product) {
-            throw new NotFoundException(__('Invalid product'));
+            throw new NotFoundException(__('Product not found'));
         }
 
         $this->set('product', $product);

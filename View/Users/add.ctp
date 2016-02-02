@@ -1,7 +1,7 @@
+<h1>Register</h1>
 <div class='col-md-4'>
 <?php echo $this->Form->create('User', array('class' => 'form-horizontal')); ?>
 <fieldset>
-	<legend><?php echo __('Register'); ?></legend>
 	<div class='form-group'>
 		<?php echo $this->Form->input('firstname', array('label' => 'First Name', 'class' => 'form-control')); ?>
 	</div>

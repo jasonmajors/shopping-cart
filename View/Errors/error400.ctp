@@ -15,9 +15,8 @@
  */
 $this->layout = 'my-errors'; 
 ?>
-
 <h1 class="text-center"><?php echo $message; ?></h1>
-<p class="error">
+<p class="error text-center">
 	<strong><?php echo __d('cake', 'Error'); ?>: </strong>
 	<?php printf(
 		__d('cake', 'The requested address %s was not found on this server.'),

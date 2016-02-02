@@ -1,3 +1,4 @@
+<?php include 'states.php'; ?>
 <h1>Checkout</h1>
 <h2>Your items</h2>
 <table class='table'>
@@ -22,9 +23,9 @@
 <p class='text-right'>Tax: $<?php echo $order_totals['tax']; ?></p>
 <p class='text-right'>Shipping: $0.00</p>
 <p class='text-right'>Total: $<?php echo $order_totals['total']; ?></p>
+<!-- Shipping Information -->
 <h2>Shipping Information</h2>
 <p class='text-muted'>Please verify your shipping information</p>
-
 <div class='col-md-4'>
 		<?php echo $this->Form->create('Order'); ?>
 	<div class='form-group'> 
@@ -44,12 +45,18 @@
 </div>
 <div class='col-md-4'>	
 	<div class='form-group'>
-		<?php echo $this->Form->input('Order.shipping_state', array('label' => 'State', 'class' => 'form-control')); ?>
+		<?php echo $this->Form->input('Order.shipping_state', array(
+																'options' => $states,
+																'label' => 'State', 
+																'class' => 'form-control'
+															)
+														); ?>
 	</div>
 	<div class='form-group'>
 		<?php echo $this->Form->input('Order.shipping_zipcode', array('label' => 'Zipcode', 'class' => 'form-control')); ?>
 	</div>
 </div>
+<!-- Billing Information -->
 <h2>Billing Information</h2>
 <p class='text-muted'>Please verify your billing information</p>
 <div class='col-md-4'>
@@ -70,7 +77,12 @@
 </div>
 <div class='col-md-4'>	
 	<div class='form-group'>
-		<?php echo $this->Form->input('Order.billing_state', array('label' => 'State', 'class' => 'form-control')); ?>
+		<?php echo $this->Form->input('Order.billing_state', array(
+																'options' => $states,
+																'label' => 'State', 
+																'class' => 'form-control'
+															)
+														); ?>
 	</div>
 	<div class='form-group'>
 		<?php echo $this->Form->input('Order.billing_zipcode', array('label' => 'Zipcode', 'class' => 'form-control')); ?>

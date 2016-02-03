@@ -58,8 +58,34 @@ class UsersController extends AppController
         };
     }
     // Need to be able to update user info
-    public function update() {
-
+    public function update($user_id=null) {
+        $this->layout = 'bootstrap';
+        if (!$user_id) {
+            throw new NotFoundException('That user could not be found');
+        }
+        // Check if user_id matches the user that is logged in
+        $id = $this->Auth->user('id');
+        if ($id != $user_id) {
+            throw new ForbiddenException('Unauthorized attempt to modify user');
+        }
+        
+        $user = $this->User->findById($user_id);
+        if (!$user) {
+                throw new NotFoundException('That user could not be found');
+        }   
+        if ($this->request->is(array('put', 'post'))) {
+            $this->User->id = $user_id;
+            if ($this->User->save($this->request->data)) {
+                $this->Flash->set('Your information has been updated');
+                return $this->redirect(array('controller' => 'products', 'action' => 'index'));    
+            } else {
+                $this->Flash->set('Unable to update your information');
+            }
+        }
+        // Retrieve the user data to be updated
+        if (!$this->request->data) {
+            $this->request->data = $user;
+        }
     }
 
 }

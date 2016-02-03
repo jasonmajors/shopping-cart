@@ -16,6 +16,7 @@
         <li><?php echo "<a>Hi, {$firstname}</a>"; ?></li>
         <li><?php echo $this->Html->link('My Cart', array('controller' => 'orders', 'action' => 'view')); ?></li>
         <li><?php echo $this->Html->link('My Orders', array('controller' => 'orders', 'action' => 'myOrders')); ?></li>
+        <li><?php echo $this->Html->link('My Info', array('controller' => 'users', 'action' => 'update', $id)); ?></li>
         <li><?php echo $this->Html->link('Logout', array('controller' => 'users', 'action' => 'logout')); ?></li>
       <?php else: ?>
         <li><?php echo $this->Html->link('Login', array('controller' => 'users', 'action' => 'login')); ?></li>

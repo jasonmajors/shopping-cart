@@ -64,6 +64,8 @@ class AppController extends Controller
 	public function beforeRender()
 	{
 		$firstname = $this->Auth->user('firstname');
+		$id = $this->Auth->user('id');
 		$this->set('firstname', $firstname);
+		$this->set('id', $id);
 	}
 }

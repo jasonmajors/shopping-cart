@@ -19,7 +19,7 @@ class UsersController extends AppController
                 // Saving 'loggedIn' the session so we can check if a user is logged in from the navbar element
                 // Alternatively, we could pass a loggedIn variable to each view from the controller
                 $this->Session->write('loggedIn', True);
-                return $this->redirect(array('controller' => 'products', 'action' => 'index')   );
+                return $this->redirect(array('controller' => 'products', 'action' => 'index'));
             }
             $this->Flash->set('Invalid username or password, please try again');
         }
@@ -35,6 +35,20 @@ class UsersController extends AppController
     {
         $this->layout = 'bootstrap';
         if ($this->request->is('post')) {
+            // Check to make sure there isn't already a user registered under the desired email
+            $email = $this->request->data['User']['email'];
+            $email_unavailable = $this->User->find('first', array(
+                                                    'conditions' => array(
+                                                        'User.email' => $email
+                                                        )
+                                                    )
+                                                );
+            // Flash a message that the email is unavailable and reload the page
+            if ($email_unavailable) {
+                $this->Flash->set('That email address is already registered');
+                $this->redirect(array('controller' => 'users', 'action' => 'add'));
+            }
+
             $this->User->create();
             if ($this->User->save($this->request->data)) {
                 $this->Flash->set('The user has been saved');

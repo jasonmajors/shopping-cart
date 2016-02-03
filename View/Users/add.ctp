@@ -1,5 +1,6 @@
 <h1>Register</h1>
 <div class='col-md-4'>
+<?php echo $this->Flash->render(); ?>
 <?php echo $this->Form->create('User', array('class' => 'form-horizontal')); ?>
 <fieldset>
 	<div class='form-group'>

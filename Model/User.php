@@ -1,21 +1,36 @@
-<?php
+	<?php
 
 App::uses('AppModel', 'Model');
 App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 
 class User extends AppModel {
 	public $validate = array(
+		'firstname' => array(
+			'rule' => 'notBlank',
+		),
+		'lastname' => array(
+			'rule' => 'notBlank',
+		),
+		'address' => array(
+			'rule' => 'notBlank',
+		),
+		'city' => array(
+			'rule' => 'notBlank',
+		),
+		'zipcode' => array(
+			'rule' => array('lengthBetween', 5, 5),
+			'message' => 'Zipcode must be 5 digits'
+		),
+		'state' => array(
+			'rule' => 'notBlank',
+		),
 		'email' => array(
-			'required' => array(
-				'rule' => 'notBlank',
-				'message' => 'A email is required'
-			)
+			'rule' => 'notBlank',
+			'message' => 'A email is required'
 		),
 		'password' => array(
-			'required' => array(
-				'rule' => 'notBlank',
-				'message' => 'A password is required'
-			)
+			'rule' => 'notBlank',
+			'message' => 'A password is required'
 		)
 	);	
 	

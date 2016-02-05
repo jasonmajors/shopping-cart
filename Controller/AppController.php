@@ -50,15 +50,15 @@ class AppController extends Controller
 				'Form' => array(
 					'passwordHasher' => 'Blowfish',
 					'fields' => array('username' => 'email')
-				)
-			)
+				),
+			),
+			'authError' => 'Please login or register',
 		)
 	);
 
 	public function beforeFilter() 
 	{
 		$this->Auth->allow('index');
-		$this->Auth->authError = "Please login or register";
 	}
 
 	public function beforeRender()

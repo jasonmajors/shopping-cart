@@ -24,10 +24,6 @@
 	<div class='form-group'>
 		<?php echo $this->Form->input('zipcode', array('label' => 'Zipcode', 'class' => 'form-control')); ?>
 	</div>
-	<div class='form-group'>
-		<?php echo $this->Form->input('password', array('label' => 'Password', 'class' => 'form-control')); ?>
-	</div>
-
 </fieldset>
 <?php echo $this->Form->end(__('Update')); ?>
 </div>

@@ -26,11 +26,18 @@ class User extends AppModel {
 		),
 		'email' => array(
 			'rule' => 'notBlank',
-			'message' => 'A email is required'
+			'message' => 'An email is required'
 		),
 		'password' => array(
-			'rule' => 'notBlank',
-			'message' => 'A password is required'
+			'length' => array(
+				'rule' => array('between', 8, 20),
+				'message' => 'Your password must be between 8 and 20 characters',
+				'on' => 'create',
+			)
+		),
+		'password_confirm' => array(
+			'rule' => array('confirmPasswordsMatch'),
+			'message' => 'Password does not match'
 		)
 	);	
 	
@@ -41,6 +48,11 @@ class User extends AppModel {
 			'dependent' => 'true'
 		)
 	);
+	
+	public function confirmPasswordsMatch()
+	{
+		return $this->data[$this->alias]['password'] == $this->data[$this->alias]['password_confirm'];
+	}
 
 	public function beforeSave ($options = array()) {
 		if (isset($this->data[$this->alias]['password'])) {

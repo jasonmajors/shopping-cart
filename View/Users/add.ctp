@@ -27,7 +27,9 @@
 	<div class='form-group'>
 		<?php echo $this->Form->input('password', array('label' => 'Password', 'class' => 'form-control')); ?>
 	</div>
-
+	<div class='form-group'>
+		<?php echo $this->Form->input('password_confirm', array('label' => 'Confirm Password', 'type' => 'password', 'class' => 'form-control')); ?>
+	</div>
 </fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>
 </div>

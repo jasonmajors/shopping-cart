@@ -85,6 +85,7 @@ class UsersController extends AppController
         // Retrieve the user data to be updated
         if (!$this->request->data) {
             $this->request->data = $user;
+            unset($this->request->data['User']['password']);
         }
     }
 

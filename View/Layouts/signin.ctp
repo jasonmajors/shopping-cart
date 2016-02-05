@@ -23,7 +23,6 @@
 	<?php echo $this->element('navbar'); ?>
 	<div class="container">
 		<?php echo $this->Flash->render(); ?>
-
 		<?php echo $this->fetch('content'); ?>
 		<div id="footer">
 		<?php echo $this->fetch('footer'); ?>

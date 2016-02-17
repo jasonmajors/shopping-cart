@@ -3,7 +3,12 @@ App::uses('AppController', 'Controller');
 
 class OrdersController extends AppController 
 {
-    // Helper function to check if the user already has an open order
+    /**
+    * Helper function to check if the user already has an open order
+    *
+    * @param int $user_id
+    * @return boolean whether or not the user has an open order
+    */
     private function checkForOpenOrderID($user_id) 
     {
         $order = $this->Order->find('all',
@@ -19,7 +24,14 @@ class OrdersController extends AppController
             return False;
         }
     }
-    // Quick helper function to check if an order matches the logged in user
+    
+    /**
+    * Quick helper function to check if an order belongs the logged in user
+    *
+    * @param int $order_id
+    * @param string $status open or closed
+    * @return boolean
+    */
     private function orderMatchesUser($order_id, $status='open') 
     {
         $user_id = $this->Auth->user('id');

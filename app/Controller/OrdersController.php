@@ -24,7 +24,7 @@ class OrdersController extends AppController
             return False;
         }
     }
-    
+
     /**
     * Quick helper function to check if an order belongs the logged in user
     *
@@ -57,7 +57,15 @@ class OrdersController extends AppController
         }
         return $product_found;
     }
-    // Retrieves an array containing the qty of an entry in the orders_products table and the primary key of the entry (the id)
+    
+    /**
+    * Retrieves an array containing the qty of an entry in the orders_products table 
+    * and the primary key of the entry (the id)
+    *
+    * @param int $order_id
+    * @param int $p_id product id
+    * @return array 
+    */
     private function fetchProductQty($order_id, $p_id) 
     {
         // Method created in OrdersProducts. Returns the data array for the row in orders_products table given an order and product ID

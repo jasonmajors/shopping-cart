@@ -4,4 +4,6 @@ This is a project I'm working on to learn more about PHP and the CakePHP framewo
 
 I'm still working on fleshing out the application/making it look pretty so it can pass as a website for a fake retail company, however the main focus of the project was creating the working shopping cart backend, and any other functionality is icing on the cake.
 
+Done for now!
+
 Register a user and create some orders, or use login: jdoe@fake.com/password01

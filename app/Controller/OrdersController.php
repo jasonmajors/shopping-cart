@@ -7,7 +7,7 @@ class OrdersController extends AppController
     * Helper function to check if the user already has an open order
     *
     * @param int $user_id
-    * @return boolean whether or not the user has an open order
+    * @return boolean Whether or not the user has an open order
     */
     private function checkForOpenOrderID($user_id) 
     {
@@ -43,7 +43,14 @@ class OrdersController extends AppController
             return False;
         }
     }
-    // TODO: Has to be a better way to check this. Should query the orders_products table directly instead of looping through the data structure returned by the framework
+
+    /**
+    * Checks to see if a product already exists in a given order
+    *
+    * @param int $order_id
+    * @param int $p_id Product id
+    * @return boolean
+    */
     private function isProductInOrder($order_id, $p_id) 
     {
         $order = $this->Order->findById($order_id);
@@ -75,7 +82,15 @@ class OrdersController extends AppController
 
         return array($current_qty, $entry_id);
     }
-    // Updates an already existing order
+
+    /**
+    * Updates an already existing order
+    *
+    * @param int $order_id
+    * @param int $p_id
+    * @param int $qty Current quantity of the product in the order
+    * @return Request Updates the order and redirects to the home page
+    */
     private function updateOrder($order_id, $p_id, $qty) 
     {
         // Check to see if the product they're adding is already in the order
@@ -117,6 +132,12 @@ class OrdersController extends AppController
         }
     }
 
+    /**
+    * Create an Order or call updateOrder if the user already has an open order.
+    *
+    * @param Request POST data when a user attempts to add an item to their cart
+    * @return Request redirects to home page
+    */
     public function create() 
     {
         if (!$this->request->data) {
@@ -165,7 +186,14 @@ class OrdersController extends AppController
             }
         }
     }
-    // Returns an array containing the subtotal, tax, and total as a string in x,xxx.xx format
+
+    /**
+    * Returns an array containing the subtotal, tax, and total as a string in x,xxx.xx format
+    *
+    * @param Order $order
+    * @param float $taxrate
+    * @return array Contains the tax, subtotal, and total values for an order in string format
+    */
     private function getOrderTotalsArray($order, $taxrate) {
         $order_totals = array();
         $subtotal = 0;
@@ -184,6 +212,12 @@ class OrdersController extends AppController
         return $order_totals;
     }
 
+    /**
+    * Set the Order items and totals for a user
+    *
+    * @param Request 
+    * @return void
+    */
     public function view() 
     {
         $this->layout = 'bootstrap';        
@@ -208,6 +242,13 @@ class OrdersController extends AppController
         }
     }
 
+    /**
+    * Deletes a Product from an Order
+    * 
+    * @param int $order_id
+    * @param int $p_id Product ID
+    * @return Request refreshes the cart page after deleting the Product
+    */
     public function deleteEntry($order_id, $p_id) 
     {
         $order_matches_user = $this->orderMatchesUser($order_id);

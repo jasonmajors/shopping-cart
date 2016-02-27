@@ -89,7 +89,7 @@ class OrdersController extends AppController
     * @param int $order_id
     * @param int $p_id
     * @param int $qty Current quantity of the product in the order
-    * @return Request Updates the order and redirects to the home page
+    * @return Response Updates the order and redirects to the home page
     */
     private function updateOrder($order_id, $p_id, $qty) 
     {
@@ -136,7 +136,7 @@ class OrdersController extends AppController
     * Create an Order or call updateOrder if the user already has an open order.
     *
     * @param Request POST data when a user attempts to add an item to their cart
-    * @return Request redirects to home page
+    * @return Response redirects to home page
     */
     public function create() 
     {
@@ -247,7 +247,7 @@ class OrdersController extends AppController
     * 
     * @param int $order_id
     * @param int $p_id Product ID
-    * @return Request refreshes the cart page after deleting the Product
+    * @return Response refreshes the cart page after deleting the Product
     */
     public function deleteEntry($order_id, $p_id) 
     {
@@ -274,6 +274,40 @@ class OrdersController extends AppController
         return $this->redirect(array('controller' => 'orders', 'action' => 'view'));
     }
 
+    /** 
+    * Helper function for checkOut method below. Submits an order given an order ID
+    *
+    * @param int $order_id
+    * @return Response
+    */
+    private function submitOrder($order_id) 
+    {
+        // Make sure it checks if the order belongs to the logged in user
+        $order_matches_user = $this->orderMatchesUser($order_id);
+        if (!$order_matches_user) {
+            throw new ForbiddenException(__('Unauthorized attempted order submission'));
+        }
+        $order = $this->Order->findById($order_id);
+        $order_totals = $this->getOrderTotalsArray($order, $taxrate=0.085);
+
+        $this->Order->id = $order_id;
+        // Set the modified date to the date the order is placed and close the order
+        $this->Order->set(array(
+            'modified' => date('Y-m-d H:i:s'),
+            // $orders_totals['total'] is a string value of the total. Need to remove the "," and cast to float to store it as a decimal in the db
+            'total' => (float)str_replace(",", "", $order_totals['total']),
+            'status' => 'closed'
+            )
+        );
+        $this->Order->save();
+    }
+
+    /**
+    * Displays the order details and handles submission on POST request
+    *
+    * @param int $order_id
+    * @return Response
+    */
     public function checkOut($order_id=null) 
     {
         $this->layout = 'bootstrap';
@@ -323,28 +357,12 @@ class OrdersController extends AppController
         $this->set('order_totals', $order_totals);
     }
 
-    private function submitOrder($order_id) 
-    {
-        // Make sure it checks if the order belongs to the logged in user
-        $order_matches_user = $this->orderMatchesUser($order_id);
-        if (!$order_matches_user) {
-            throw new ForbiddenException(__('Unauthorized attempted order submission'));
-        }
-        $order = $this->Order->findById($order_id);
-        $order_totals = $this->getOrderTotalsArray($order, $taxrate=0.085);
-
-        $this->Order->id = $order_id;
-        // Set the modified date to the date the order is placed and close the order
-        $this->Order->set(array(
-            'modified' => date('Y-m-d H:i:s'),
-            // $orders_totals['total'] is a string value of the total. Need to remove the "," and cast to float to store it as a decimal in the db
-            'total' => (float)str_replace(",", "", $order_totals['total']),
-            'status' => 'closed'
-            )
-        );
-        $this->Order->save();
-    }
-
+    /**
+    * Displays the authenticated user's closed orders
+    *
+    * @param Request
+    * @return Response
+    */
     public function myOrders() 
     {
         $this->layout = 'bootstrap';
@@ -362,6 +380,12 @@ class OrdersController extends AppController
         $this->set('orders', $orders);
     }
 
+    /**
+    * Views the order details for a given closed order
+    *
+    * @param int $order_id
+    * @return Response
+    */
     public function viewOrder($order_id=null) 
     {
         $this->layout = 'bootstrap';
